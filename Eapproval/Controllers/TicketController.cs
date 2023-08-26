@@ -559,8 +559,9 @@ namespace Eapproval.Controllers
         {
             var user = JsonSerializer.Deserialize<User>(data["user"]);
 
-            var result =await _ticketsService.GetTicketsForHandler(user);
+            var result =await _ticketsService.GetProjectedTicketsForHandlers(user);
 
+       
             return Ok(result);
 
 
@@ -582,7 +583,7 @@ namespace Eapproval.Controllers
 
 
         
-        [Authorize(Policy = "allpower")]
+
         [HttpPost]
         [Route("getAllTickets")]
         public async Task<IActionResult> GetAllTickets()

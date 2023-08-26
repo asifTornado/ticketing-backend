@@ -22,6 +22,57 @@ namespace Eapproval.Models
     }
 
     
+
+    public class TicketsProjected
+    {
+        [BsonId]
+        [BsonRepresentation(BsonType.ObjectId)]
+        [JsonPropertyName("_id")]
+        [BsonElement("_id")]
+        public string? Id { get; set; } = null;
+
+
+        [BsonElement("number")]
+        [JsonPropertyName("number")]
+        public int Number { get; set; }
+
+
+
+        [BsonElement("status")]
+        [JsonPropertyName("status")]
+        public string? Status { get; set; } = "Not Available";
+
+
+        [BsonElement("requestDate")]
+        [JsonPropertyName("requestDate")]
+        public string? RequestDate { get; set; } = "Not Available";
+
+        [BsonElement("currentHandlerName")]
+        [JsonPropertyName("currentHandlerName")]
+        public string? CurrentHandlerName { get; set; } = null;
+
+        [BsonElement("currentHandlerEmail")]
+        [JsonPropertyName("currentHandlerEmail")]
+        public string? CurrentHandlerEmail { get; set; } = null;
+
+        [BsonElement("raisedByName")]
+        [JsonPropertyName("raisedByName")]
+        public string? RaisedByName { get; set; } = null;
+
+        [BsonElement("raisedByEmail")]
+        [JsonPropertyName("raisedByEmail")]
+        public string? RaisedByEmail { get; set; } = null;
+
+
+
+        [BsonElement("problemDetails")]
+        [JsonPropertyName("problemDetails")]
+        public string? ProblemDetails { get; set; } = "Not Available";
+
+
+    }
+
+
     
     [BsonIgnoreExtraElements]
     public class Tickets

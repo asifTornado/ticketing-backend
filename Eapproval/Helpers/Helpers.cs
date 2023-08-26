@@ -55,7 +55,7 @@ namespace Eapproval.Helpers
                 foreach (var file in data.Files)
                 {
                     var newName = _fileHandler.GetUniqueFileName(file.FileName);
-                    _fileHandler.SaveFile(path, newName, file);
+                    await _fileHandler.SaveFile(path, newName, file);
 
                     fileNames.Add(new File2 { OriginalName = file.FileName, FileName = newName });
 

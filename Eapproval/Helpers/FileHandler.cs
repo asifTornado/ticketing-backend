@@ -11,14 +11,14 @@
                 + Path.GetExtension(fileName);
         }
 
-        public void SaveFile(string path, string filename, IFormFile file)
+        public async Task SaveFile(string path, string filename, IFormFile file)
         {
 
             var filePath = Path.Combine(path, filename);
 
             using (var stream = new FileStream(filePath, FileMode.Create))
             {
-               file.CopyToAsync(stream);
+              await file.CopyToAsync(stream);
             }
         }
     }

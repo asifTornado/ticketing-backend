@@ -24,6 +24,44 @@ public class TicketsService
      }
 
 
+    public async Task<List<TicketsProjected>> GetProjectedTicketsForHandlers(User user)
+    {
+        var projections = Builders<Tickets>.Projection
+                          .Include(ticket => ticket.Id)
+                          .Include(ticket => ticket.RequestDate)
+                          .Include(ticket => ticket.Number)
+                          .Include(ticket => ticket.RaisedBy)
+
+                          .Include(ticket => ticket.CurrentHandler)
+
+                          .Include(ticket => ticket.ProblemDetails)
+                          .Include(ticket => ticket.Status);
+        var results = await _tickets.Find(new BsonDocument()).Project(projections).ToListAsync();
+        List<TicketsProjected> mappedResults = new List<TicketsProjected>();
+        
+        foreach (var result in results)
+        {
+            var newTicket = new TicketsProjected()
+            {
+                Id = result["_id"].ToString(),
+                ProblemDetails = result["problemDetails"].ToString(),
+                RaisedByEmail = result["raisedBy"]["mailAddress"].ToString(),
+                RaisedByName = result["raisedBy"]["empName"].ToString(),
+                CurrentHandlerEmail = result["currentHandler"]["mailAddress"].ToString(),
+                CurrentHandlerName = result["currentHandler"]["empName"].ToString(),
+                Number = result["number"].ToInt32(),
+                Status = result["status"].ToString()
+            };
+
+            mappedResults.Add(newTicket);
+        }
+
+        
+
+        return mappedResults;
+    }
+
+
     public async Task<List<Tickets>> GetTicketsForHandler(User user) =>
     await _tickets.Find(ticket => ticket.HigherApprover.MailAddress == user.MailAddress || ticket.Supervisor.MailAddress == user.MailAddress || ticket.AssignedTo.MailAddress == user.MailAddress || ticket.CurrentHandler.MailAddress == user.MailAddress || ticket.TicketingHead.MailAddress == user.MailAddress || ticket.RaisedBy.MailAddress == user.MailAddress || ticket.PrevHandler.MailAddress == user.MailAddress || (ticket.Mentions != null && ticket.Mentions.Any(x=>x.EmpName == user.EmpName || x.MailAddress == user.MailAddress))).ToListAsync();
 
