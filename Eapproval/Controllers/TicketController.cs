@@ -547,7 +547,7 @@ namespace Eapproval.Controllers
 
             var message = $"{user.EmpName} has rejected the ticket you raised for {ticket.Department}";
 
-            _notifier.InsertNotification(action.Time, message, user, ticket.CurrentHandler, ticket.Id);
+            _notifier.InsertNotification(action.Time, message, user, ticket.RaisedBy, ticket.Id);
             _ticketMailer.SendMail(user, ticket.RaisedBy, ticket.Department, EventType.Rejected, ticket.Id, user);
             return Ok(true);
         }
@@ -559,7 +559,7 @@ namespace Eapproval.Controllers
         {
             var user = JsonSerializer.Deserialize<User>(data["user"]);
 
-            var result =await _ticketsService.GetProjectedTicketsForHandlers(user);
+            var result =await _ticketsService.GetTicketsForHandler(user);
 
        
             return Ok(result);
