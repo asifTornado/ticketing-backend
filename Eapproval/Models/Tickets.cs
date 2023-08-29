@@ -69,6 +69,8 @@ namespace Eapproval.Models
         [JsonPropertyName("problemDetails")]
         public string? ProblemDetails { get; set; } = "Not Available";
 
+  
+
 
     }
 
@@ -261,6 +263,11 @@ namespace Eapproval.Models
         [BsonElement("mentions")]
         [JsonPropertyName("mentions")]
         public List<User>? Mentions { get; set; } = null;
+
+
+        [BsonElement("users")]
+        [JsonPropertyName("users")]
+        public List<string>? Users { get; set; } = new List<string>();
 
 
 

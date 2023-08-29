@@ -29,11 +29,12 @@ namespace Eapproval.Controllers
         FileHandler _fileHandler;
         Notifier _notifier;
         UsersService _usersService;
+        TeamsService _teamsService;
        
      
         
 
-        public TicketController(UsersService usersService, HelperClass helperClass, TicketsService ticketsService, TicketMailer ticketMailer, FileHandler fileHandler, Notifier notifier)
+        public TicketController(TeamsService teamsService, UsersService usersService, HelperClass helperClass, TicketsService ticketsService, TicketMailer ticketMailer, FileHandler fileHandler, Notifier notifier)
         {
             _helperClass = helperClass;
             _ticketsService = ticketsService; 
@@ -41,6 +42,7 @@ namespace Eapproval.Controllers
             _fileHandler = fileHandler;
             _notifier = notifier;
             _usersService = usersService;
+            _teamsService = teamsService;
         }
 
 
@@ -68,7 +70,7 @@ namespace Eapproval.Controllers
 
             if (ticket.Type == "service")
             {
-                ticket.CurrentHandler = ticket.Supervisor;
+                ticket.CurrentHandler = null;
                  mailEvent = EventType.SeekSupervisorApproval;
                 ticket.ApprovalRequired = true;
                 ticket.Status = "Ticket Submitted - Seeking Department Head's Approval";
@@ -77,7 +79,7 @@ namespace Eapproval.Controllers
             }
             else
             {
-                ticket.CurrentHandler = ticket.TicketingHead;
+                ticket.CurrentHandler = null;
                 mailEvent = EventType.SeekHigherAuthorityApproval;
                 ticket.ApprovalRequired = false;
                 ticket.Status = "Ticket Submitted";
@@ -87,25 +89,35 @@ namespace Eapproval.Controllers
 
             ticket.RequestDate = _helperClass.GetCurrentTime();
 
+
+
             var action = await  _helperClass.GetAction(ticket.Actions, user, ticket.CurrentHandler, comment, ActionType.TicketRaised, file:fileNames); 
             
             ticket.Actions.Add(action);
 
+
+            var subordinates = await _teamsService.GetConcernedUsers(ticket.Department);
+
+            foreach (var subordinate in subordinates)
+            {
+                _notifier.InsertNotification(action.Time, message, user, subordinate.User, ticket.Id);
+                ticket.Users.Add(subordinate.User.MailAddress);
+
+            }
+
+
             await _ticketsService.CreateAsync(ticket);
 
 
-             
-
-
-            
-            _ticketMailer.SendMail(user, ticket.CurrentHandler, ticket.Department, mailEvent, ticket.Id, user);
 
 
 
 
+            /*        _ticketMailer.SendMail(user, ticket.CurrentHandler, ticket.Department, mailEvent, ticket.Id, user);*/
 
 
-            _notifier.InsertNotification(action.Time, message, user, ticket.CurrentHandler, ticket.Id);
+
+       
 
 
             

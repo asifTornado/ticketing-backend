@@ -18,6 +18,14 @@ public class TeamsService
     }
 
 
+    public async Task<List<SubordinatesClass>> GetConcernedUsers(string name)
+    {
+        var result = await _team.Find(x => x.Name == name).FirstOrDefaultAsync();
+        var users = result.Subordinates;
+        return users;
+    }
+
+
     public async Task<List<Team>> GetAllTeams() =>
     await _team.Find(_ => true).ToListAsync();
 

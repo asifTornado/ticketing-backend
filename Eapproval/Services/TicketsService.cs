@@ -21,7 +21,10 @@ public class TicketsService
         var mongoClient = new MongoClient("mongodb://localhost:27017");
         var mongoDatabase = mongoClient.GetDatabase("eapproval");
         _tickets = mongoDatabase.GetCollection<Tickets>("tickets");
-     }
+    }
+
+
+ 
 
 
     public async Task<List<TicketsProjected>> GetProjectedTicketsForHandlers(User user)
@@ -63,7 +66,7 @@ public class TicketsService
 
 
     public async Task<List<Tickets>> GetTicketsForHandler(User user) =>
-    await _tickets.Find(ticket => ticket.HigherApprover.MailAddress == user.MailAddress || ticket.Supervisor.MailAddress == user.MailAddress || ticket.AssignedTo.MailAddress == user.MailAddress || ticket.CurrentHandler.MailAddress == user.MailAddress || ticket.TicketingHead.MailAddress == user.MailAddress || ticket.RaisedBy.MailAddress == user.MailAddress || ticket.PrevHandler.MailAddress == user.MailAddress || (ticket.Mentions != null && ticket.Mentions.Any(x=>x.EmpName == user.EmpName || x.MailAddress == user.MailAddress))).ToListAsync();
+    await _tickets.Find(ticket => ticket.Users.Any(x => x == user.MailAddress) || ticket.TicketingHead.MailAddress == user.MailAddress || ticket.CurrentHandler.MailAddress == user.MailAddress || ticket.RaisedBy.MailAddress == user.MailAddress).ToListAsync();
 
 
     public async Task<List<Tickets>> GetDepartmentTickets(string userMail)
