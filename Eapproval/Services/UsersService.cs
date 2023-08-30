@@ -1,7 +1,7 @@
 ﻿using Eapproval.Models;
 using Microsoft.Extensions.Options;
 using MongoDB.Driver;
-
+using Org.BouncyCastle.Crypto.Operators;
 
 namespace Eapproval.services;
 
@@ -57,6 +57,12 @@ public class UsersService
 
     public async Task UpdateAsync(string id, User updatedTicket) =>
         await _user.ReplaceOneAsync(x => x.Id == id, updatedTicket);
+
+    public async Task UpdateUserNumber(User user)
+    {
+        user.Numbers = user.Numbers + 1;
+        await _user.ReplaceOneAsync(x => x.Id == user.Id, user);
+    }
 
     public async Task RemoveAsync(string id) =>
         await _user.DeleteOneAsync(x => x.Id == id);

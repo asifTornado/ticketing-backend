@@ -260,6 +260,8 @@ namespace Eapproval.Controllers
             var ticket = JsonSerializer.Deserialize<Tickets>(data["ticket"]);
             var comment = data["comment"];
 
+
+            await _usersService.UpdateUserNumber(user);
             ticket.Assigned = true;
             ticket.AssignedTo = user;
             ticket.PrevHandler = ticket.CurrentHandler;
@@ -286,12 +288,13 @@ namespace Eapproval.Controllers
         {
 
             var ticket = JsonSerializer.Deserialize<Tickets>(data["ticket"]);
+            
             var approver = JsonSerializer.Deserialize<User>(data["approver"]);
             var comment = data["comment"];
             var user = JsonSerializer.Deserialize<User>(data["user"]);
 
-            
-            ticket.PrevHandler = ticket.CurrentHandler;
+            await _usersService.UpdateUserNumber(approver);
+            ticket.PrevHandler = user;
             ticket.CurrentHandler = approver;
             ticket.Assigned = true;
             ticket.AssignedTo = approver;
@@ -312,6 +315,42 @@ namespace Eapproval.Controllers
             _notifier.InsertNotification(action.Time, message, user, ticket.CurrentHandler, ticket.Id);
 
             _ticketMailer.SendMail(user, ticket.CurrentHandler, ticket.Department, EventType.Assign, ticket.Id, user);
+            return Ok(true);
+
+
+
+        }
+
+        [HttpPost]
+        [Route("unassign")]
+        public async Task<IActionResult> Unassign(IFormCollection data)
+        {
+
+            var ticket = JsonSerializer.Deserialize<Tickets>(data["ticket"]);
+
+            var prevassignee = JsonSerializer.Deserialize<User>(data["prevAssignee"]);
+            var comment = data["comment"];
+            var user = JsonSerializer.Deserialize<User>(data["user"]);
+
+           
+            ticket.PrevHandler = prevassignee;
+            ticket.CurrentHandler = null;
+            ticket.Assigned = false;
+            ticket.AssignedTo = null;
+            ticket.MadeCloseRequest = false;
+            ticket.Status = "Ticket Submitted";
+            ticket.Accepted = false;
+        
+            var action = await _helperClass.GetAction(ticket.Actions, user, ticket.CurrentHandler, comment, ActionType.Unassigned);
+            ticket.Actions.Add(action);
+            await _ticketsService.UpdateAsync(ticket.Id, ticket);
+
+
+            var message = $"{user.EmpName} has unassigned a ticket from you which was raised for {ticket.Department} by {ticket.RaisedBy.EmpName}";
+
+            _notifier.InsertNotification(action.Time, message, user, prevassignee, ticket.Id);
+
+          
             return Ok(true);
 
 

@@ -2,6 +2,7 @@
 using MongoDB.Bson;
 using System.Text.Json.Serialization;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
+using Newtonsoft.Json;
 
 namespace Eapproval.Models;
 
@@ -103,6 +104,10 @@ public class User
     [JsonPropertyName("location")]
     public string? Location { get; set; } = "Not Available";
 
+
+    [BsonElement("numbers")]
+    [JsonPropertyName("numbers")]
+    public int Numbers { get; set; } = 0;
 
 
 

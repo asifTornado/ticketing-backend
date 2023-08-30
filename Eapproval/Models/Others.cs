@@ -65,7 +65,10 @@ namespace Eapproval.Models
 
 
         [EnumMember(Value = "CloseRequestReject")] //12
-        CloseRequestReject
+        CloseRequestReject,
+
+        [EnumMember(Value = "Unassigned")] //13
+        Unassigned
     }
 
 

@@ -367,6 +367,16 @@ namespace Eapproval.Controllers
             return Ok(result);
         }
 
+        [HttpPost]
+        [Route("/getSupportFromHead")]
+        public async Task<IActionResult> GetSupportFromHead(IFormCollection data)
+        {
+            var user = JsonSerializer.Deserialize<User>(data["user"]);
+
+            var result = await _teamsService.GetSupportFromHead(user);
+            return Ok(result);
+        }
+
 
 
         [HttpPost]
