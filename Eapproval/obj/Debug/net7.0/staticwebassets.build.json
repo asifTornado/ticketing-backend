@@ -1,6 +1,6 @@
 {
   "Version": 1,
-  "Hash": "B3pUp7Xj+xlrTLY/nOYd6p7jxj+QBGcKYiWCdDaIz+s=",
+  "Hash": "yO15ohuP2LccHJrj1AHQXPCeH2ABtDXddpz7nCs5I5w=",
   "Source": "Eapproval",
   "BasePath": "_content/Eapproval",
   "Mode": "Default",
@@ -2276,6 +2276,23 @@
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
       "OriginalItemSpec": "wwwroot\\uploads\\Essentials of Quranic Arabic - Vol 1 by Masood Ranginwala_f1917bae.pdf"
+    },
+    {
+      "Identity": "E:\\Ticketing source code\\ticketing Backed\\Eapproval\\wwwroot\\uploads\\Evsie Selection PPT_a6e2d341.pdf",
+      "SourceId": "Eapproval",
+      "SourceType": "Discovered",
+      "ContentRoot": "E:\\Ticketing source code\\ticketing Backed\\Eapproval\\wwwroot\\",
+      "BasePath": "_content/Eapproval",
+      "RelativePath": "uploads/Evsie Selection PPT_a6e2d341.pdf",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\uploads\\Evsie Selection PPT_a6e2d341.pdf"
     },
     {
       "Identity": "E:\\Ticketing source code\\ticketing Backed\\Eapproval\\wwwroot\\uploads\\favicon_0258c618.ico",

@@ -107,7 +107,10 @@ public class PriorityClass
        
         Dictionary<string, TimeSpan> PriorityMap = new Dictionary<string, TimeSpan>();
         
-
+    
+        [BsonElement("cateogory")]
+        [JsonPropertyName("category")]
+        public string Category { get; set; } = "Not Available";
         
 
 

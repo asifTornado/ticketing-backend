@@ -32,32 +32,32 @@ namespace Eapproval.Controllers
         public async Task<IActionResult> CreateTeam(IFormCollection data)
         {
             var team = JsonSerializer.Deserialize<Team>(data["team"]);
-            if(team.HasServices == true)
-            {
-                foreach(var x in team.Services)
-                {
-                    x.ServiceLeader.UserType = "leader";
-                    await _usersService.UpdateAsync(x.ServiceLeader.Id, x.ServiceLeader);
+            // if(team.HasServices == true)
+            // {
+            //     foreach(var x in team.Services)
+            //     {
+            //         x.ServiceLeader.UserType = "leader";
+            //         await _usersService.UpdateAsync(x.ServiceLeader.Id, x.ServiceLeader);
 
-                    foreach(var y in x.Subordinates)
-                    {
-                        y.User.UserType = "support";
-                        await _usersService.UpdateAsync(y.User.Id, y.User);
-                    }
+            //         foreach(var y in x.Subordinates)
+            //         {
+            //             y.User.UserType = "support";
+            //             await _usersService.UpdateAsync(y.User.Id, y.User);
+            //         }
                     
 
-                }
-            }
-            else
-            {
-                team.Leader.UserType = "leader";
-                await _usersService.UpdateAsync(team.Leader.Id, team.Leader);
-                foreach (var x in team.Subordinates)
-                {
-                    x.User.UserType = "support";
-                    await _usersService.UpdateAsync(x.User.Id, x.User);
-                }
-            }
+            //     }
+            // }
+            // else
+            // {
+            //     team.Leader.UserType = "leader";
+            //     await _usersService.UpdateAsync(team.Leader.Id, team.Leader);
+            //     foreach (var x in team.Subordinates)
+            //     {
+            //         x.User.UserType = "support";
+            //         await _usersService.UpdateAsync(x.User.Id, x.User);
+            //     }
+            // }
             await _teamsService.CreateTeam(team);
             return Ok(true);
         }
@@ -94,37 +94,37 @@ namespace Eapproval.Controllers
             var team = JsonSerializer.Deserialize<Team>(data["team"]);
 
 
-            if (team.HasServices == true)
-            {
-                team.Head.UserType = "departmentPower";
-                await _usersService.UpdateAsync(team.Head.Id, team.Head);
+            // if (team.HasServices == true)
+            // {
+            //     team.Head.UserType = "departmentPower";
+            //     await _usersService.UpdateAsync(team.Head.Id, team.Head);
 
-                foreach (var x in team.Services)
-                {
-                    x.ServiceLeader.UserType = "leader";
-                    await _usersService.UpdateAsync(x.ServiceLeader.Id, x.ServiceLeader);
+            //     foreach (var x in team.Services)
+            //     {
+            //         x.ServiceLeader.UserType = "leader";
+            //         await _usersService.UpdateAsync(x.ServiceLeader.Id, x.ServiceLeader);
 
-                    foreach (var y in x.Subordinates)
-                    {
-                        y.User.UserType = "support";
-                        await _usersService.UpdateAsync(y.User.Id, y.User);
-                    }
+            //         foreach (var y in x.Subordinates)
+            //         {
+            //             y.User.UserType = "support";
+            //             await _usersService.UpdateAsync(y.User.Id, y.User);
+            //         }
 
 
-                }
-            }
-            else
-            {
-                team.Leader.UserType = "leader";
-                team.Head.UserType = "departmentPower";
-                await _usersService.UpdateAsync(team.Leader.Id, team.Leader);
-                await _usersService.UpdateAsync(team.Head.Id, team.Head);
-                foreach (var x in team.Subordinates)
-                {
-                    x.User.UserType = "support";
-                    await _usersService.UpdateAsync(x.User.Id, x.User);
-                }
-            }
+            //     }
+            // }
+            // else
+            // {
+            //     team.Leader.UserType = "leader";
+            //     team.Head.UserType = "departmentPower";
+            //     await _usersService.UpdateAsync(team.Leader.Id, team.Leader);
+            //     await _usersService.UpdateAsync(team.Head.Id, team.Head);
+            //     foreach (var x in team.Subordinates)
+            //     {
+            //         x.User.UserType = "support";
+            //         await _usersService.UpdateAsync(x.User.Id, x.User);
+            //     }
+            // }
 
 
              _teamsService.UpdateTeam(team.Id, team);
@@ -151,203 +151,208 @@ namespace Eapproval.Controllers
         public async Task<IActionResult> UpdateRanks(IFormCollection data)
         {
             var team = JsonSerializer.Deserialize<Team>(data["team"]);
-            var teams = await _teamsService.GetAllTeams();
+
+            await _teamsService.UpdateTeam(team.Id, team);
+
+            return Ok(team);            
+
+        //     var teams = await _teamsService.GetAllTeams();
 
 
-           if(team.HasServices == true)
-            {
-                foreach (var x in team.Services) {
-                    var leader = x.ServiceLeader;
+        //    if(team.HasServices == true)
+        //     {
+        //         foreach (var x in team.Services) {
+        //             var leader = x.ServiceLeader;
 
-                    var result = teams.Find((team) =>
-                    {
-                        bool outerResult;
-                        if (team.HasServices == true)
-                        {
-                            var innerResult = team.Services.Any((service) => service.ServiceLeader.MailAddress == leader.MailAddress);
-                            outerResult = innerResult;
-                        }
-                        else
-                        {
-                            var innerResult = team.Leader.MailAddress == leader.MailAddress;
-                            outerResult = innerResult;
-                        }
+        //             var result = teams.Find((team) =>
+        //             {
+        //                 bool outerResult;
+        //                 if (team.HasServices == true)
+        //                 {
+        //                     var innerResult = team.Services.Any((service) => service.ServiceLeader.MailAddress == leader.MailAddress);
+        //                     outerResult = innerResult;
+        //                 }
+        //                 else
+        //                 {
+        //                     var innerResult = team.Leader.MailAddress == leader.MailAddress;
+        //                     outerResult = innerResult;
+        //                 }
 
-                        return outerResult;
-                    });
+        //                 return outerResult;
+        //             });
 
-                    if(result == null)
-                    {
-                        var newResult = teams.Find((team) =>
-                        {
-                            bool outerResult;
-                            if (team.HasServices == true)
-                            {
-                                var innerResult = team.Services.Any((service) => service.Subordinates.Any((subordinate) => subordinate.User.MailAddress == leader.MailAddress));
-                                outerResult = innerResult;
-                            }
-                            else
-                            {
-                                var innerResult = team.Subordinates.Any((subordinate) => subordinate.User.MailAddress == leader.MailAddress);
-                                outerResult = innerResult;
-                            }
+        //             if(result == null)
+        //             {
+        //                 var newResult = teams.Find((team) =>
+        //                 {
+        //                     bool outerResult;
+        //                     if (team.HasServices == true)
+        //                     {
+        //                         var innerResult = team.Services.Any((service) => service.Subordinates.Any((subordinate) => subordinate.User.MailAddress == leader.MailAddress));
+        //                         outerResult = innerResult;
+        //                     }
+        //                     else
+        //                     {
+        //                         var innerResult = team.Subordinates.Any((subordinate) => subordinate.User.MailAddress == leader.MailAddress);
+        //                         outerResult = innerResult;
+        //                     }
 
-                            return outerResult;
-                        });
+        //                     return outerResult;
+        //                 });
 
-                        if(newResult == null)
-                        {
-                            leader.UserType = "normal";
-                            await _usersService.UpdateAsync(leader.Id, leader);
-                        }
-                        else
-                        {
-                            await _usersService.UpdateAsync(leader.Id, leader);
-                        }
+        //                 if(newResult == null)
+        //                 {
+        //                     leader.UserType = "normal";
+        //                     await _usersService.UpdateAsync(leader.Id, leader);
+        //                 }
+        //                 else
+        //                 {
+        //                     await _usersService.UpdateAsync(leader.Id, leader);
+        //                 }
 
-                    }
+        //             }
 
-                }
-            }
-            else
-            {
-                var leader = team.Leader;
-
-
-                var result = teams.Find((team) =>
-                {
-                    bool outerResult;
-                    if (team.HasServices == true)
-                    {
-                        var innerResult = team.Services.Any((service) => service.ServiceLeader.MailAddress == leader.MailAddress);
-                        outerResult = innerResult;
-                    }
-                    else
-                    {
-                        var innerResult = team.Leader.MailAddress == leader.MailAddress;
-                        outerResult = innerResult;
-                    }
-
-                    return outerResult;
-                });
-
-                if (result == null)
-                {
-                    var newResult = teams.Find((team) =>
-                    {
-                        bool outerResult;
-                        if (team.HasServices == true)
-                        {
-                            var innerResult = team.Services.Any((service) => service.Subordinates.Any((subordinate) => subordinate.User.MailAddress == leader.MailAddress));
-                            outerResult = innerResult;
-                        }
-                        else
-                        {
-                            var innerResult = team.Subordinates.Any((subordinate) => subordinate.User.MailAddress == leader.MailAddress);
-                            outerResult = innerResult;
-                        }
-
-                        return outerResult;
-                    });
-
-                    if (newResult == null)
-                    {
-                        leader.UserType = "normal";
-                        await _usersService.UpdateAsync(leader.Id, leader);
-                    }
-                    else
-                    {
-                        await _usersService.UpdateAsync(leader.Id, leader);
-                    }
-
-                }
+        //         }
+        //     }
+        //     else
+        //     {
+        //         var leader = team.Leader;
 
 
+        //         var result = teams.Find((team) =>
+        //         {
+        //             bool outerResult;
+        //             if (team.HasServices == true)
+        //             {
+        //                 var innerResult = team.Services.Any((service) => service.ServiceLeader.MailAddress == leader.MailAddress);
+        //                 outerResult = innerResult;
+        //             }
+        //             else
+        //             {
+        //                 var innerResult = team.Leader.MailAddress == leader.MailAddress;
+        //                 outerResult = innerResult;
+        //             }
 
-            }
+        //             return outerResult;
+        //         });
 
+        //         if (result == null)
+        //         {
+        //             var newResult = teams.Find((team) =>
+        //             {
+        //                 bool outerResult;
+        //                 if (team.HasServices == true)
+        //                 {
+        //                     var innerResult = team.Services.Any((service) => service.Subordinates.Any((subordinate) => subordinate.User.MailAddress == leader.MailAddress));
+        //                     outerResult = innerResult;
+        //                 }
+        //                 else
+        //                 {
+        //                     var innerResult = team.Subordinates.Any((subordinate) => subordinate.User.MailAddress == leader.MailAddress);
+        //                     outerResult = innerResult;
+        //                 }
 
+        //                 return outerResult;
+        //             });
 
-            //////////////////////////////////////
+        //             if (newResult == null)
+        //             {
+        //                 leader.UserType = "normal";
+        //                 await _usersService.UpdateAsync(leader.Id, leader);
+        //             }
+        //             else
+        //             {
+        //                 await _usersService.UpdateAsync(leader.Id, leader);
+        //             }
 
-            if(team.HasServices == true)
-            {
-                foreach (var x in team.Services)
-                {
-                    foreach (var y in x.Subordinates)
-                    {
-                        var user = y.User;
-
-                        var result = teams.Find((team) =>
-                        {
-                            bool result;
-                            if(team.HasServices == true)
-                            {
-                                var outerResult = team.Services.Any((service) =>
-                                {
-                                    var innerResult = service.Subordinates.Any((subordinate) => subordinate.User.MailAddress == user.MailAddress);
-                                    return innerResult;
-                                });
-
-                                 result = outerResult;
-                            }
-                            else
-                            {
-                                var outerResult = team.Subordinates.Any((subordinate) => subordinate.User.MailAddress == user.MailAddress);
-                                result = outerResult;
-                            }
-                            return result;
-                        });
-
-                        if(result == null) {
-
-                            user.UserType = "normal";
-                            await _usersService.UpdateAsync(user.Id, user);
+        //         }
 
 
 
-                        }
-                    }
-                }
-            }
-            else
-            {
-                foreach(var x in team.Subordinates)
-                {
-                    var user = x.User;
-
-                    var result = teams.Find((team) =>
-                    {
-                        bool result;
-                        if (team.HasServices == true)
-                        {
-                            var outerResult = team.Services.Any((service) =>
-                            {
-                                var innerResult = service.Subordinates.Any((subordinate) => subordinate.User.MailAddress == user.MailAddress);
-                                return innerResult;
-                            });
-
-                            result = outerResult;
-                        }
-                        else
-                        {
-                            var outerResult = team.Subordinates.Any((subordinate) => subordinate.User.MailAddress == user.MailAddress);
-                            result = outerResult;
-                        }
-                        return result;
-                    });
-
-                    if (result == null)
-                    {
-
-                        user.UserType = "normal";
-                        await _usersService.UpdateAsync(user.Id, user);
+        //     }
 
 
 
-                    }
-                }
-            };
+        //     //////////////////////////////////////
+
+        //     if(team.HasServices == true)
+        //     {
+        //         foreach (var x in team.Services)
+        //         {
+        //             foreach (var y in x.Subordinates)
+        //             {
+        //                 var user = y.User;
+
+        //                 var result = teams.Find((team) =>
+        //                 {
+        //                     bool result;
+        //                     if(team.HasServices == true)
+        //                     {
+        //                         var outerResult = team.Services.Any((service) =>
+        //                         {
+        //                             var innerResult = service.Subordinates.Any((subordinate) => subordinate.User.MailAddress == user.MailAddress);
+        //                             return innerResult;
+        //                         });
+
+        //                          result = outerResult;
+        //                     }
+        //                     else
+        //                     {
+        //                         var outerResult = team.Subordinates.Any((subordinate) => subordinate.User.MailAddress == user.MailAddress);
+        //                         result = outerResult;
+        //                     }
+        //                     return result;
+        //                 });
+
+        //                 if(result == null) {
+
+        //                     user.UserType = "normal";
+        //                     await _usersService.UpdateAsync(user.Id, user);
+
+
+
+        //                 }
+        //             }
+        //         }
+        //     }
+        //     else
+        //     {
+        //         foreach(var x in team.Subordinates)
+        //         {
+        //             var user = x.User;
+
+        //             var result = teams.Find((team) =>
+        //             {
+        //                 bool result;
+        //                 if (team.HasServices == true)
+        //                 {
+        //                     var outerResult = team.Services.Any((service) =>
+        //                     {
+        //                         var innerResult = service.Subordinates.Any((subordinate) => subordinate.User.MailAddress == user.MailAddress);
+        //                         return innerResult;
+        //                     });
+
+        //                     result = outerResult;
+        //                 }
+        //                 else
+        //                 {
+        //                     var outerResult = team.Subordinates.Any((subordinate) => subordinate.User.MailAddress == user.MailAddress);
+        //                     result = outerResult;
+        //                 }
+        //                 return result;
+        //             });
+
+        //             if (result == null)
+        //             {
+
+        //                 user.UserType = "normal";
+        //                 await _usersService.UpdateAsync(user.Id, user);
+
+
+
+        //             }
+        //         }
+        //     };
 
 
             return Ok(true);

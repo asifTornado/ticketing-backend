@@ -131,7 +131,7 @@ namespace Eapproval.Helpers
             return actionObject;
         }
 
-        public async Task<User?> GetTicketingHead(Tickets ticket)
+        public async Task<List<User>?> GetTicketingHeads(Tickets ticket)
         {
 
             string? departmentHead;
@@ -151,62 +151,63 @@ namespace Eapproval.Helpers
                 Team? result = await _teamsService.GetTeamByName(departmentHead);
 
 
-             if(ticket.HasService == false)
-            {
-                var leader = await _usersService.GetOneUser(result.Leader.Id);
+          
+                var leaders = await _usersService.GetUsers(result.Leaders);
 
-                if ( leader.Available == true)
-                {
-                    var user = leader;
-                    return user;
-                }
-                else
-                {
-                    foreach (var x in result.Subordinates)
-                    {
-                        var subordinate = await _usersService.GetOneUser(x.User.Id);
-                        if (subordinate.Available == true)
-                        {
-                            subordinateList.Add(x);
-                        }
-                    }
+                // if ( leader.Available == true)
+                // {
+                //     var user = leader;
+                //     return user;
+                // }
+                // else
+                // {
+                //     foreach (var x in result.Subordinates)
+                //     {
+                //         var subordinate = await _usersService.GetOneUser(x.User.Id);
+                //         if (subordinate.Available == true)
+                //         {
+                //             subordinateList.Add(x);
+                //         }
+                //     }
 
-                    var sorted = subordinateList.OrderBy(x => x.Rank).ToArray();
-                    var user = sorted[0].User;
-                    user.UserType = "tLeader";
-                    await _usersService.UpdateAsync(user.Id, user);
-                    return user;
-                }
+                //     var sorted = subordinateList.OrderBy(x => x.Rank).ToArray();
+                //     var user = sorted[0].User;
+                //     user.UserType = "tLeader";
+                //     await _usersService.UpdateAsync(user.Id, user);
+                //     return user;
+                // }
 
-            }
-            else
-            {
-                var service = result.Services.Find(service => service.ServiceName == departmentHead);
+                return leaders;
 
-                var serviceLeader = await _usersService.GetOneUser(service.ServiceLeader.Id);
-                if (serviceLeader.Available == true)
-                {
-                    var user = serviceLeader;
-                    return user;
-                }
-                else
-                {
-                    foreach (var x in service.Subordinates)
-                    {
-                        var serviceSubordinate = await _usersService.GetOneUser(x.User.Id);
-                        if (serviceSubordinate.Available == true)
-                        {
-                            subordinateList.Add(x);
-                        }
-                    }
+       
+            // else
+            // {
+            //     var service = result.Services.Find(service => service.ServiceName == departmentHead);
 
-                    var sorted = subordinateList.OrderBy(x => x.Rank).ToArray();
-                    var user = sorted[0].User;
-                    user.UserType = "tLeader";
-                    await _usersService.UpdateAsync(user.Id, user);
-                    return user;
+            //     var serviceLeader = await _usersService.GetOneUser(service.ServiceLeader.Id);
+            //     if (serviceLeader.Available == true)
+            //     {
+            //         var user = serviceLeader;
+            //         return user;
+            //     }
+            //     else
+            //     {
+            //         foreach (var x in service.Subordinates)
+            //         {
+            //             var serviceSubordinate = await _usersService.GetOneUser(x.User.Id);
+            //             if (serviceSubordinate.Available == true)
+            //             {
+            //                 subordinateList.Add(x);
+            //             }
+            //         }
+
+            //         var sorted = subordinateList.OrderBy(x => x.Rank).ToArray();
+            //         var user = sorted[0].User;
+            //         user.UserType = "tLeader";
+            //         await _usersService.UpdateAsync(user.Id, user);
+            //         return user;
                    
-                }
+            //     }
 
 
 
@@ -215,7 +216,7 @@ namespace Eapproval.Helpers
              
               
           
-            }
+            
 
 
 

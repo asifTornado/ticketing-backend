@@ -1,4 +1,5 @@
-﻿using Eapproval.Models;
+﻿using System.Formats.Asn1;
+using Eapproval.Models;
 using Microsoft.Extensions.Options;
 using MongoDB.Driver;
 using Org.BouncyCastle.Crypto.Operators;
@@ -51,6 +52,12 @@ public class UsersService
 
     public async Task<User?> GetOneUser(string id) =>
         await _user.Find(x => x.Id == id).FirstOrDefaultAsync();
+
+
+    public async Task<List<User>> GetUsers(List<User> leaders){
+        var result = await _user.Find(x => leaders.Any(y => y.MailAddress == x.MailAddress)).ToListAsync();
+        return result;
+    }
 
     public async Task CreateAsync(User newTicket) =>
         await _user.InsertOneAsync(newTicket);

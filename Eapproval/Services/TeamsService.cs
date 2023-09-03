@@ -46,7 +46,7 @@ public class TeamsService
 
     public async Task<List<User>> GetSupportFromHead(User user)
     {
-        var result = await _team.Find(Team => Team.Leader.MailAddress == user.MailAddress).FirstOrDefaultAsync();
+        var result = await _team.Find(Team => Team.Leaders.Any(x => x.MailAddress == user.MailAddress)).FirstOrDefaultAsync();
         List<User> support = new List<User>();
 
         foreach(var subordinate in result.Subordinates)

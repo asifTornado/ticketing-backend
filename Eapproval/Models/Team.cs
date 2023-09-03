@@ -72,9 +72,14 @@ public class Team
     public string? Name { get; set; } = "Not Available";
 
 
-    [BsonElement("leader")]
-    [JsonPropertyName("leader")]
-    public User? Leader { get; set; } = null;
+    [BsonElement("leaders")]
+    [JsonPropertyName("leaders")]
+    public List<User>? Leaders { get; set; } = null;
+
+
+    [BsonElement("problemTypes")]
+    [JsonPropertyName("problemTypes")]
+    public List<string>? ProblemTypes { get; set; } = null;
 
 
 

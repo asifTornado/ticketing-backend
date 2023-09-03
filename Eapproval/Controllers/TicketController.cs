@@ -65,8 +65,10 @@ namespace Eapproval.Controllers
 
             ticket.PrevHandler = user;
             EventType mailEvent;
-
-            ticket.TicketingHead = await _helperClass.GetTicketingHead(ticket);
+            
+            var ticketingHeads = await _helperClass.GetTicketingHeads(ticket);
+            var thisTicketHead = ticketingHeads.FirstOrDefault(x => x.Location == ticket.Location);
+            ticket.TicketingHead = thisTicketHead;
 
             if (ticket.Type == "service")
             {
