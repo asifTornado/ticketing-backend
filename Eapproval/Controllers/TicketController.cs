@@ -620,6 +620,21 @@ namespace Eapproval.Controllers
 
 
         [HttpPost]
+        [Route("getTickets2")]
+        public async Task<IActionResult> GetTickets2(IFormCollection data)
+        {
+            var user = JsonSerializer.Deserialize<User>(data["user"]);
+
+            var result = await _ticketsService.GetTicketsForHandler2(user);
+
+
+            return Ok(result);
+
+
+        }
+
+
+        [HttpPost]
         [Route("getTicket")]
         public async Task<IActionResult> GetTicket(IFormCollection data)
         {
@@ -673,9 +688,22 @@ namespace Eapproval.Controllers
         public async Task<IActionResult> SetPriority(IFormCollection data)
         {
             var results = await _ticketsService.GetAsync(data["id"]);
-            results.Priority = data["priority"];
+            results.Priority.Priority = data["priority"];
+            results.Priority.ResolutionTime = Mappings.PriorityResolutionMap[data["priority"]];
+            results.Priority.ResponseTime = Mappings.PriorityResponseMap[data["priority"]];
             await _ticketsService.UpdateAsync(data["id"], results);
             return Ok(results.Priority);
+        }
+
+        [HttpPost]
+        [Route("setTicketType")]
+        public async Task<IActionResult> SetTicketType(IFormCollection data)
+        {
+            var results = await _ticketsService.GetAsync(data["id"]);
+            results.TicketType = data["ticketType"];
+           
+            await _ticketsService.UpdateAsync(data["id"], results);
+            return Ok(results.TicketType);
         }
 
 

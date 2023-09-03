@@ -367,6 +367,18 @@ namespace Eapproval.Controllers
             return Ok(result);
         }
 
+
+
+        [HttpPost]
+        [Route("/getAllSupport")]
+        public async Task<IActionResult> GetAllSupport(IFormCollection data)
+        {
+           
+
+            var result = await _teamsService.GetAllSupport();
+            return Ok(result);
+        }
+
         [HttpPost]
         [Route("/getSupportFromHead")]
         public async Task<IActionResult> GetSupportFromHead(IFormCollection data)

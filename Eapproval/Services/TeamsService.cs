@@ -58,6 +58,22 @@ public class TeamsService
     }
 
 
+    public async Task<List<User>> GetAllSupport()
+    {
+        var teams = await _team.Find(_ => true).ToListAsync();
+        var support = new List<User>();
+        foreach (var team in teams)
+        {
+            foreach(var subordinate in team.Subordinates)
+            {
+                support.Add(subordinate.User);
+            }
+        }
+
+        return support;
+    }
+    
+
 
 
     public async Task<Team?> GetTeamById(string id)

@@ -5,9 +5,27 @@ using MongoDB.Bson.Serialization.Attributes;
 using System.Text.Json.Serialization;
 using System.ComponentModel;
 
-namespace Eapproval.Models
+namespace Eapproval.Models;
 
+
+public class PriorityClass
 {
+    [BsonElement("priority")]
+    [JsonPropertyName("priority")]
+    public string? Priority { get; set; } = "Not Set";
+
+
+    [BsonElement("responseTime")]
+    [JsonPropertyName("responseTime")]
+    public TimeSpan? ResponseTime { get; set; } = TimeSpan.Zero;
+
+
+    [BsonElement("resolutionTime")]
+    [JsonPropertyName("resolutionTime")]
+    public TimeSpan? ResolutionTime { get; set; } = TimeSpan.Zero;
+
+}
+
 
     public class DetailsClass
     {
@@ -72,7 +90,7 @@ namespace Eapproval.Models
   
 
 
-    }
+    };
 
 
     
@@ -85,6 +103,12 @@ namespace Eapproval.Models
         [JsonPropertyName("_id")]
         [BsonElement("_id")]
         public string? Id { get; set; } = null;
+
+       
+        Dictionary<string, TimeSpan> PriorityMap = new Dictionary<string, TimeSpan>();
+        
+
+        
 
 
         [BsonElement("number")]
@@ -135,7 +159,12 @@ namespace Eapproval.Models
 
         [BsonElement("priority")]
         [JsonPropertyName("priority")]
-        public string? Priority { get; set; }
+        public PriorityClass? Priority { get; set; } = new PriorityClass() { 
+        Priority = "Priority 1",
+        ResponseTime = Mappings.PriorityResponseMap["Priority 1"],
+        ResolutionTime = Mappings.PriorityResolutionMap["Priority 1"]
+        };
+
 
         [BsonElement("approvalRequired")]
         [JsonPropertyName("approvalRequired")]
@@ -173,7 +202,7 @@ namespace Eapproval.Models
 
         [BsonElement("ticketType")]
         [JsonPropertyName("ticketType")]
-        public string? TicketType { get; set; } = "Not Available";
+        public string? TicketType { get; set; } = "Incident";
 
         [BsonElement("raisedBy")]
         [JsonPropertyName("raisedBy")]
@@ -278,4 +307,4 @@ namespace Eapproval.Models
 
 
 
-}
+
