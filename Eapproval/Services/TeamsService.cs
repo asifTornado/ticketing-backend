@@ -9,12 +9,14 @@ public class TeamsService
 {
 
     private readonly IMongoCollection<Team> _team;
+    private readonly UsersService _usersService;
 
-    public TeamsService()
+    public TeamsService( UsersService usersService)
     {
         var mongoClient = new MongoClient("mongodb://localhost:27017");
         var mongoDatabase = mongoClient.GetDatabase("eapproval");
         _team = mongoDatabase.GetCollection<Team>("teams");
+        _usersService = usersService;
     }
 
 
@@ -49,10 +51,9 @@ public class TeamsService
         var result = await _team.Find(Team => Team.Leaders.Any(x => x.MailAddress == user.MailAddress)).FirstOrDefaultAsync();
         List<User> support = new List<User>();
 
-        foreach(var subordinate in result.Subordinates)
-        {
-            support.Add(subordinate.User);
-        }
+        var supportUsers = await _usersService.GetSupportUsers(result);
+
+        support = supportUsers;
 
         return support;
     }
@@ -90,6 +91,12 @@ public class TeamsService
     public async Task RemoveTeam(string id) =>
         await _team.DeleteOneAsync(x => x.Id == id);
 
-    
+    public async Task<List<ProblemTypesClass>> GetProblemForUser(User user){
+        var team = await _team.Find(x=>x.Subordinates.Any(y => y.User.MailAddress == user.MailAddress)).FirstOrDefaultAsync();
+        var problems = team.ProblemTypes;
+
+        return problems;
+
+    }
 
 }

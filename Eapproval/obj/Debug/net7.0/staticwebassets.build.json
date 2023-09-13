@@ -1,6 +1,6 @@
 {
   "Version": 1,
-  "Hash": "yO15ohuP2LccHJrj1AHQXPCeH2ABtDXddpz7nCs5I5w=",
+  "Hash": "xbcuW938lvXCL6SEfESjOLsrh6zAM37O5f+2R01g8XQ=",
   "Source": "Eapproval",
   "BasePath": "_content/Eapproval",
   "Mode": "Default",
@@ -2633,6 +2633,40 @@
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
       "OriginalItemSpec": "wwwroot\\uploads\\nusrat_starfishes_97e2b889.docx"
+    },
+    {
+      "Identity": "E:\\Ticketing source code\\ticketing Backed\\Eapproval\\wwwroot\\uploads\\pdfFile_0ced66f6",
+      "SourceId": "Eapproval",
+      "SourceType": "Discovered",
+      "ContentRoot": "E:\\Ticketing source code\\ticketing Backed\\Eapproval\\wwwroot\\",
+      "BasePath": "_content/Eapproval",
+      "RelativePath": "uploads/pdfFile_0ced66f6",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\uploads\\pdfFile_0ced66f6"
+    },
+    {
+      "Identity": "E:\\Ticketing source code\\ticketing Backed\\Eapproval\\wwwroot\\uploads\\pdfFile_37e42a6e",
+      "SourceId": "Eapproval",
+      "SourceType": "Discovered",
+      "ContentRoot": "E:\\Ticketing source code\\ticketing Backed\\Eapproval\\wwwroot\\",
+      "BasePath": "_content/Eapproval",
+      "RelativePath": "uploads/pdfFile_37e42a6e",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\uploads\\pdfFile_37e42a6e"
     },
     {
       "Identity": "E:\\Ticketing source code\\ticketing Backed\\Eapproval\\wwwroot\\workbox-27b29e6f.js",

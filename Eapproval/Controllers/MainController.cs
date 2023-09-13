@@ -6,8 +6,8 @@ using System.Text.Json;
 using Eapproval.Helpers;
 using Eapproval.Services;
 
-namespace Eapproval.Controllers
-{
+namespace Eapproval.Controllers;
+
     [Route("/")]
     [ApiController]
     public class MainController : Controller
@@ -20,13 +20,19 @@ namespace Eapproval.Controllers
 
         TicketsService _ticketsService;
 
-        public MainController(TicketsService ticketsService, TeamsService teamsService, UsersService usersService, UserApi userApi, LocationService locationService)
+        FileHandler _fileHandler;
+
+        TicketMailer _ticketMailer;
+
+        public MainController(TicketMailer ticketMailer, FileHandler fileHandler, TicketsService ticketsService, TeamsService teamsService, UsersService usersService, UserApi userApi, LocationService locationService)
         {
             _locationService = locationService;
             _usersService = usersService;
             _usersApi = userApi;
             _teamsService = teamsService;
             _ticketsService = ticketsService;
+            _fileHandler = fileHandler;
+            _ticketMailer = ticketMailer;
         }
 
 
@@ -141,5 +147,38 @@ namespace Eapproval.Controllers
             return Ok(results);
 
         }
-    }
+
+
+        [HttpPost]
+        [Route("/getProblems")]
+        public async Task<IActionResult> GetProblems(IFormCollection data)
+        {
+            var user = JsonSerializer.Deserialize<User>(data["user"]);
+            var result = await _teamsService.GetProblemForUser(user);
+            return Ok(result);
+
+
+
+        }
+
+
+
+        [HttpPost]
+        [Route("/sendReport")]
+        public async Task<IActionResult> SendReport(IFormCollection data){
+            var users = JsonSerializer.Deserialize<List<User>>(data["users"]);
+            Console.WriteLine("1");
+            var file = data.Files["pdf"];
+            Console.WriteLine("2");
+            var path = Path.GetFullPath(Path.Combine(Environment.CurrentDirectory, "wwwroot", "uploads")); 
+            var fileName = _fileHandler.GetUniqueFileName(file.FileName);
+            var filePath = await _fileHandler.SaveFile(path, fileName, file);
+            _ticketMailer.SendPdfToUsers(filePath, users);
+
+            return Ok(true);
+
+
+
+            
+        }
 }

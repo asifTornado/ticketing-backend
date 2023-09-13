@@ -100,6 +100,8 @@ namespace Eapproval.Controllers
 
             var subordinates = await _teamsService.GetConcernedUsers(ticket.Department);
 
+            await _ticketsService.CreateAsync(ticket);
+
             foreach (var subordinate in subordinates)
             {
                 _notifier.InsertNotification(action.Time, message, user, subordinate.User, ticket.Id);
@@ -107,8 +109,10 @@ namespace Eapproval.Controllers
 
             }
 
+            await _ticketsService.UpdateAsync(ticket.Id, ticket);
 
-            await _ticketsService.CreateAsync(ticket);
+
+         
 
 
 
@@ -509,7 +513,38 @@ namespace Eapproval.Controllers
             
 
             ticket.PrevHandler = ticket.CurrentHandler;
-            ticket.CurrentHandler = null;
+          
+
+            ticket.Status = "Closed Ticket";
+            ticket.MadeCloseRequest = false;
+
+     
+           
+            var message = $"{user.EmpName} has closed the ticket you raised for the {ticket.Department} ";
+
+            var action = await _helperClass.GetAction(ticket.Actions, user, ticket.CurrentHandler, comment, ActionType.TicketClosed);
+            ticket.Actions.Add(action);
+            await _ticketsService.UpdateAsync(ticket.Id, ticket);
+            _notifier.InsertNotification(action.Time, message, user, ticket.RaisedBy, ticket.Id);
+            _ticketMailer.SendMail(user, ticket.RaisedBy, ticket.Department, EventType.CloseRequestAccept, ticket.Id, user);
+            return Ok(true);
+        }
+
+
+
+        [HttpPost]
+        [Route("rate")]
+        public async Task<IActionResult> Rate(IFormCollection data)
+        {
+            var result = await _helperClass.GetContent(data);
+            var user = result.user;
+            var ticket = result.ticket;
+            var comment = result.comment;
+            var rating = data["rating"];
+            
+
+            ticket.PrevHandler = ticket.CurrentHandler;
+        
 
             ticket.Status = "Closed Ticket";
             ticket.MadeCloseRequest = false;
@@ -532,12 +567,15 @@ namespace Eapproval.Controllers
            
             
 
-            var action = await _helperClass.GetAction(ticket.Actions, user, ticket.CurrentHandler, comment, ActionType.CloseRequestAccept);
+            var action = await _helperClass.GetAction(ticket.Actions, user, ticket.CurrentHandler, comment, ActionType.Rated);
             ticket.Actions.Add(action);
             await _ticketsService.UpdateAsync(ticket.Id, ticket);
             _ticketMailer.SendMail(user, ticket.RaisedBy, ticket.Department, EventType.CloseRequestAccept, ticket.Id, user);
             return Ok(true);
         }
+
+
+
 
 
 
@@ -706,6 +744,25 @@ namespace Eapproval.Controllers
            
             await _ticketsService.UpdateAsync(data["id"], results);
             return Ok(results.TicketType);
+        }
+
+
+        [HttpPost]
+        [Route("setLocation")]
+        public async Task<IActionResult> SetLocation(IFormCollection data)
+        {
+            var results = await _ticketsService.GetAsync(data["id"]);
+            results.Location = data["location"];
+            results.Assigned = false;
+            results.AssignedTo = null;
+            results.CurrentHandler = null;
+
+            var team = await _teamsService.GetTeamByName(results.Department);
+
+            var ticketingHead = team.Leaders.Where( x => x.Location == results.Location).FirstOrDefault();
+            results.TicketingHead = ticketingHead;
+            await _ticketsService.UpdateAsync(data["id"], results);
+            return Ok(results.Location);
         }
 
 

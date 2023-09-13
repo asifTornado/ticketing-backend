@@ -60,15 +60,18 @@ namespace Eapproval.Models
         [EnumMember(Value = "CloseRequest")] //10
         CloseRequest,
 
-        [EnumMember(Value = "CloseRequestAccept")] //11
-        CloseRequestAccept,
+        [EnumMember(Value = "TicketClosed")] //11
+        TicketClosed,
 
 
         [EnumMember(Value = "CloseRequestReject")] //12
         CloseRequestReject,
 
         [EnumMember(Value = "Unassigned")] //13
-        Unassigned
+        Unassigned,
+
+        [EnumMember(Value = "rated")] //14
+        Rated
     }
 
 

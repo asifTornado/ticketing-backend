@@ -7,6 +7,23 @@ using Org.BouncyCastle.Asn1.Mozilla;
 
 namespace Eapproval.Models;
 
+
+
+
+public class ProblemTypesClass{
+    
+    [BsonElement("name")]
+    [JsonPropertyName("name")]
+    public string Name { get; set; } = "Not Given";
+
+
+    [BsonElement("subs")]
+    [JsonPropertyName("subs")]
+    public List<string> Subs { get; set; } = new List<string>();
+
+
+}
+
 public class SubordinatesClass
 {
 
@@ -79,7 +96,7 @@ public class Team
 
     [BsonElement("problemTypes")]
     [JsonPropertyName("problemTypes")]
-    public List<string>? ProblemTypes { get; set; } = null;
+    public List<ProblemTypesClass>? ProblemTypes { get; set; } = null;
 
 
 

@@ -1,7 +1,10 @@
 {
   "ExpandedNodes": [
-    ""
+    "",
+    "\\Backup",
+    "\\Backup2",
+    "\\Eapproval"
   ],
-  "SelectedNode": "\\Eapproval.sln",
+  "SelectedNode": "\\Backup\\Eapproval.sln",
   "PreviewInSolutionExplorer": false
 }

@@ -162,4 +162,66 @@ public class TicketMailer
             await client.DisconnectAsync(true);
         }
     }
+
+
+
+  public async Task  SendPdfToUsers(string pdfFilePath, List<User> users)
+    {
+        try
+        {
+            var message = new MimeMessage();
+            message.From.Add(new MailboxAddress("Your Name", "your-email@example.com")); // Replace with your name and email
+            message.Subject = "Subject of the Email";
+
+            // Create a multipart message
+            var multipart = new Multipart("mixed");
+
+            // Add the PDF as an attachment
+            var attachment = new MimePart("application", "pdf")
+            {
+                Content = new MimeContent(File.OpenRead(pdfFilePath), ContentEncoding.Default),
+                ContentDisposition = new ContentDisposition(ContentDisposition.Attachment),
+                ContentTransferEncoding = ContentEncoding.Base64,
+                FileName = Path.GetFileName(pdfFilePath)
+            };
+            multipart.Add(attachment);
+
+            // Create a text message
+            var text = new TextPart("plain")
+            {
+                Text = "Body of the Email"
+            };
+            multipart.Add(text);
+
+            // Set the multipart as the message body
+            message.Body = multipart;
+
+              string senderEmail = "md.asif@hameemgroup.com";
+        string senderPassword = "Golam@HG#$188";
+
+            using (var client = new SmtpClient())
+            {
+                await client.ConnectAsync("smtp.gmail.com", 587, SecureSocketOptions.StartTls); // Replace with your SMTP server details
+                await client.AuthenticateAsync(senderEmail, senderPassword); // Replace with your email and password
+              foreach (User user in users)  
+                {
+                    message.To.Clear();
+                    message.To.Add(new MailboxAddress("", user.MailAddress));
+
+                    await client.SendAsync(message);
+                }
+
+                await client.DisconnectAsync(true);
+            }
+        }
+        catch (Exception ex)
+        {
+            // Handle any exceptions (e.g., logging, notifying admin, etc.)
+            Console.WriteLine("Error sending email: " + ex.Message);
+        }
+    }
+
+
+
+    
 }

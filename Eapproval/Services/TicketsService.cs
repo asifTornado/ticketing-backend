@@ -66,7 +66,7 @@ public class TicketsService
 
 
     public async Task<List<Tickets>> GetTicketsForHandler(User user) =>
-    await _tickets.Find(ticket => ticket.Users.Any(x => x == user.MailAddress) || ticket.TicketingHead.MailAddress == user.MailAddress ||  ticket.RaisedBy.MailAddress == user.MailAddress).ToListAsync();
+    await _tickets.Find(ticket => (ticket.Users.Any(x => x == user.MailAddress) || ticket.TicketingHead.MailAddress == user.MailAddress ||  ticket.RaisedBy.MailAddress == user.MailAddress) && ticket.Location == user.Location).ToListAsync();
 
 
     public async Task<List<Tickets>> GetTicketsForHandler2(User user) =>

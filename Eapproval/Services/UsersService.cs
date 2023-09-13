@@ -22,7 +22,10 @@ public class UsersService
     public async Task<List<User>> GetAsync() =>
     await _user.Find(_ => true).ToListAsync();
 
-
+   public async Task<List<User>> GetSupportUsers(Team team){
+    var result = await _user.Find(x => team.Subordinates.Any(y => y.User.MailAddress == x.MailAddress)).ToListAsync();
+    return result;  
+   }
 
     public async Task<User> GetUserByMail(string mail)
     {

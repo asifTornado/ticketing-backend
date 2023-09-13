@@ -11,7 +11,7 @@
                 + Path.GetExtension(fileName);
         }
 
-        public async Task SaveFile(string path, string filename, IFormFile file)
+        public async Task<string> SaveFile(string path, string filename, IFormFile file)
         {
 
             var filePath = Path.Combine(path, filename);
@@ -20,6 +20,8 @@
             {
               await file.CopyToAsync(stream);
             }
+
+            return filePath;
         }
     }
 }
