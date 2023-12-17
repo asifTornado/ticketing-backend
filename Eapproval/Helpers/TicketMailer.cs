@@ -136,10 +136,8 @@ public class TicketMailer
                 break;
         }
 
-        string senderEmail = "md.asif@hameemgroup.com";
-        string senderPassword = "Golam@HG#$188";
-        string? recipientEmail = to.MailAddress;
-        
+  
+ 
 
         var message = new MimeMessage();
         message.From.Add(new MailboxAddress("", senderEmail));
