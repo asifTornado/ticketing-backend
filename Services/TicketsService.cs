@@ -319,7 +319,7 @@ return new JsonResult(result);
 
     public async Task<Tickets?> GetAsync(int? id){
 
-        var result = await _context.Tickets.AsNoTracking()
+        var result = await _context.Tickets.AsNoTracking().AsSplitQuery()
         .Include(x => x.AssignedTo)
         .Include(x => x.TicketingHead)
                   
@@ -328,9 +328,12 @@ return new JsonResult(result);
         .ThenInclude(x => x.RaisedBy)
         .Include(x => x.Actions)
         .ThenInclude(x => x.ForwardedTo)
+        .Include(x => x.Actions)
+        .ThenInclude(x => x.Files)
         .Include(x => x.RaisedBy)
         .Include(x => x.CurrentHandler)
         .Include(x => x.PrevHandler)
+      
         
         
         
@@ -347,6 +350,9 @@ return new JsonResult(result);
         newTicket.Id = 0;
      
         _context.Entry(newTicket).State = EntityState.Added;
+
+
+       
     
 
         await _context.SaveChangesAsync();
@@ -390,7 +396,28 @@ return new JsonResult(result);
             if(action.Id == 0 || action.Id == null){   
             _context.Entry(action).State = EntityState.Added;
             }
+
+            await _context.SaveChangesAsync();
+             
+             if(action.Files != null){
+
+             
+            foreach(var file in action.Files){
+                file.ActionId = action.Id;
+                if(file.Id == 0 || file.Id == null){
+                _context.Entry(file).State = EntityState.Added;
+
+                }else{
+                    _context.Entry(file).State = EntityState.Modified;
+                }
+            }
+             }
         }
+
+        // foreach(var file in updatedTicket.Files){
+        //     file.TicketId = updatedTicket.Id;
+        //     _context.Entry(file).State = EntityState.Added;
+        // }
 
         
 

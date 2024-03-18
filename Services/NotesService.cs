@@ -24,7 +24,9 @@ public class NotesService:INotesService
 
     public async Task<List<Notes>> GetNotesById(int id){
 
-        var results = await _context.Notes.AsNoTracking().Where(x => x.TicketId == id).ToListAsync();
+        var results = await _context.Notes.AsNoTracking()
+        .Include(x => x.Files)
+        .Where(x => x.TicketId == id).ToListAsync();
 
         return results;
         // await using var connection = _connection.GetConnection();
@@ -38,7 +40,15 @@ public class NotesService:INotesService
     public async Task InsertNote(Notes note)
     {
         _context.Entry(note).State = EntityState.Added;
+    
 
+        await _context.SaveChangesAsync();
+
+
+        foreach(var file in note.Files){
+            file.NoteId = note.Id;
+            _context.Entry(file).State = EntityState.Added;
+        }
 
         await _context.SaveChangesAsync();
           

@@ -73,6 +73,7 @@ namespace Eapproval.Controllers.TicketControllers
             var ticketingHeads = await _helperClass.GetTicketingHeads(ticket);
             var thisTicketHead = ticketingHeads.FirstOrDefault(x => x.Location == ticket.Location);
             ticket.TicketingHead = thisTicketHead;
+            ticket.Files = fileNames;
 
             if (ticket.Type == "service")
             {
