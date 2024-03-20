@@ -31,10 +31,10 @@ namespace Eapproval.Helpers
             {
                 Time = time,
                 Message = message,
-                From = from,
-                To = to,
                 TicketId = ticketId,
                 Type = type,
+                FromId = from.Id,
+                ToId = to.Id,
                 Mentions = mentions,
          
             };

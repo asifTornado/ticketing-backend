@@ -13,8 +13,6 @@ namespace Eapproval.Models
         [JsonPropertyName("_id")]
         [Key]
         public int? Id { get; set; }
-
-
      
         [JsonPropertyName("time")]
         public string Time { get; set; }
@@ -22,41 +20,26 @@ namespace Eapproval.Models
      
         [JsonPropertyName("message")]
         public string Message { get; set; }
-
-
    
         [JsonPropertyName("ticketId")]
         public int? TicketId { get; set; }
-
-
-        [JsonPropertyName("ticket")]
-        public virtual Tickets? Ticket { get; set; }
-
-
 
         [JsonPropertyName("fromId")]
         public int? FromId { get; set; }
 
         [JsonPropertyName("from")]
-        public virtual User? From { get; set; }
-
-
+        public virtual User? From {get; set;}
       
         [JsonPropertyName("toId")]
         public int? ToId { get; set; } = null; 
-
-        [JsonPropertyName("to")]
-        public virtual User? To { get; set; } = null;
-
         
         [JsonPropertyName("type")]
         public string Type { get; set; } = "normal";
 
 
-
         [BsonElement("mentions")]
         [JsonPropertyName("mentions")]
-        public virtual List<string>? Mentions { get; set; } = new List<string>();
+        public  List<string> Mentions { get; set; } = new List<string>();
 
 
 

@@ -68,10 +68,10 @@ public class UserConfiguration : IEntityTypeConfiguration<User>
         .HasForeignKey(x => x.FromId)
         .OnDelete(DeleteBehavior.NoAction);
 
-        builder.HasMany(x => x.NotificationTos)
-        .WithOne(x => x.To)
-        .HasForeignKey(x => x.ToId)
-        .OnDelete(DeleteBehavior.NoAction);
+        // builder.HasMany(x => x.NotificationTos)
+        // .WithOne(x => x.To)
+        // .HasForeignKey(x => x.ToId)
+        // .OnDelete(DeleteBehavior.NoAction);
 
         builder.HasMany(x => x.ActionsRaised)
         .WithOne(x => x.RaisedBy)

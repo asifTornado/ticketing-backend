@@ -250,7 +250,28 @@ return new JsonResult(result);
                     //  .OrderBy(x => x.Id)
                     //  .Skip(skipValue)
                     //  .Take(pageSize)
-                     .ProjectTo<TicketVM>(_mapper.ConfigurationProvider)
+                     .Select(x => new TicketVM{
+                        Id = x.Id,
+                        RequestDate = x.RequestDate,
+                        Status = x.Status,
+                        ProblemDetails = x.ProblemDetails,
+                        RaisedBy = new User{
+                            Id = x.RaisedById,
+                            EmpName = x.RaisedBy.EmpName,
+                            MailAddress = x.RaisedBy.MailAddress
+                        },
+                        CurrentHandler = new User{
+                            Id = x.CurrentHandler.Id,
+                            EmpName = x.CurrentHandler.EmpName,
+                            MailAddress = x.CurrentHandler.MailAddress
+                        },
+                        AssignedTo = new User {
+                            Id = x.AssignedToId,
+                            EmpName = x.AssignedTo.MailAddress,
+                            MailAddress = x.AssignedTo.MailAddress
+                        }
+
+                     })
                      .ToListAsync();
                      
          return result;

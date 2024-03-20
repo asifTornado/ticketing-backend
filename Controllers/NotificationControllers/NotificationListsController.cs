@@ -28,7 +28,7 @@ namespace Eapproval.Controllers.NotificationControllers
         {
 
             var user = JsonSerializer.Deserialize<User>(data["user"]);
-            var result = await _notificationService.GetNotificationsByUser(user.MailAddress, user.EmpName);
+            var result = await _notificationService.GetNotificationsByUser(user.MailAddress, user.EmpName, user.Id);
 
             return Ok(result);
                 

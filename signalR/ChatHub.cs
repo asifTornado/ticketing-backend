@@ -143,8 +143,8 @@ public class ChatHub:Hub
         {
             Time = _helperClass.GetCurrentTime(),
             Message = message,
-            From = From,
-            To = To,
+            FromId = From.Id,
+            ToId = To.Id,
             TicketId = ticketId,
             Type="chat"
         };

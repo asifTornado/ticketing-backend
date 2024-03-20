@@ -104,10 +104,10 @@ public class TicketConfiguration : IEntityTypeConfiguration<Tickets>
         .OnDelete(DeleteBehavior.Cascade);
 
 
-        builder.HasMany(x => x.Notifications)
-        .WithOne(x => x.Ticket)
-        .HasForeignKey(x => x.TicketId)
-        .OnDelete(DeleteBehavior.Cascade);
+        // builder.HasMany(x => x.Notifications)
+        // .WithOne(x => x.Ticket)
+        // .HasForeignKey(x => x.TicketId)
+        // .OnDelete(DeleteBehavior.Cascade);
 
         
 

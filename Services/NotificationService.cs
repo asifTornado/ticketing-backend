@@ -31,8 +31,6 @@ public class NotificationService:INotificationService {
 
         var result = await _context.Notifications
         .Include(n => n.Mentions)
-        .Include(n => n.To)
-        .Include(n => n.From)
         .AsNoTracking().ToListAsync();
 
         return result;
@@ -44,9 +42,6 @@ public class NotificationService:INotificationService {
     {
 
         var result = await _context.Notifications
-        .Include(n => n.Mentions)
-        .Include(n => n.To)
-        .Include(n => n.From)
         .AsNoTracking().FirstOrDefaultAsync(x => x.Id == int.Parse(id));
         return result;
 
@@ -61,25 +56,28 @@ public class NotificationService:INotificationService {
     }
 
 
-    public async Task<List<Notification>> GetNotificationsByUser(string email, string name){
+    public async Task<List<Notification>> GetNotificationsByUser(string email, string name, int? id){
 
-        var result = await _context.Notifications
-        .Include(n => n.Mentions)
-        .Include(n => n.To)
-        .Include(n => n.From)
-        .AsNoTracking().Where(x => x.To.MailAddress == email || x.To.EmpName == name || x.Mentions.Any(x => x == email)).ToListAsync();
+        var result = await _context.Notifications.AsNoTracking()
+        .Include(x => x.From)
+        .Select(x => new Notification{
+            FromId = x.From.Id,
+            TicketId = x.TicketId,
+            ToId = x.ToId,
+            Mentions = x.Mentions,
+            Type = x.Type
+        })
+        .ToListAsync();
+        
+        var finalResult = result
+        .Where(x => x.ToId == id  || x.Mentions!.Contains(name)).ToList();
 
         return result;
-
       
     }
 
 
     public async Task InsertNotification(Notification notification){
-
-           
-      notification.FromId = notification.From.Id;
-      notification.ToId = notification.To.Id;
 
         _context.Entry(notification).State = EntityState.Added;
 

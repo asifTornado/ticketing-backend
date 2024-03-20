@@ -44,11 +44,15 @@ public class NotesService:INotesService
 
         await _context.SaveChangesAsync();
 
+    if(note.Files != null){
 
+    
         foreach(var file in note.Files){
             file.NoteId = note.Id;
             _context.Entry(file).State = EntityState.Added;
         }
+
+    }
 
         await _context.SaveChangesAsync();
           
