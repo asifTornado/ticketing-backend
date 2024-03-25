@@ -1,12 +1,11 @@
-﻿using System;
-using Microsoft.EntityFrameworkCore.Migrations;
+﻿using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
 namespace Eapproval.Migrations
 {
     /// <inheritdoc />
-    public partial class initialcreation : Migration
+    public partial class _1 : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -22,22 +21,6 @@ namespace Eapproval.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Locations", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "PriorityClass",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Priority = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    ResponseTime = table.Column<TimeSpan>(type: "time", nullable: true),
-                    ResolutionTime = table.Column<TimeSpan>(type: "time", nullable: true),
-                    TicketId = table.Column<int>(type: "int", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_PriorityClass", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -126,11 +109,11 @@ namespace Eapproval.Migrations
                     ProblemDetails = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Assigned = table.Column<bool>(type: "bit", nullable: true),
                     HasService = table.Column<bool>(type: "bit", nullable: true),
-                    Location = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Phone = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Location = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Phone = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Extension = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Email = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    PriorityId = table.Column<int>(type: "int", nullable: true),
+                    Priority = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     ApprovalRequired = table.Column<bool>(type: "bit", nullable: true),
                     Remarks = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     CloseRequested = table.Column<bool>(type: "bit", nullable: true),
@@ -147,9 +130,8 @@ namespace Eapproval.Migrations
                     TicketingHeadId = table.Column<int>(type: "int", nullable: true),
                     PrevHandlerId = table.Column<int>(type: "int", nullable: true),
                     ServiceType = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Groups = table.Column<string>(type: "varchar(max)", nullable: false),
                     MadeCloseRequest = table.Column<bool>(type: "bit", nullable: true),
-                    beenRejected = table.Column<bool>(type: "bit", nullable: true),
+                    BeenRejected = table.Column<bool>(type: "bit", nullable: true),
                     Accepted = table.Column<bool>(type: "bit", nullable: true),
                     Mentions = table.Column<string>(type: "varchar(max)", nullable: true),
                     Users = table.Column<string>(type: "varchar(max)", nullable: true),
@@ -159,21 +141,12 @@ namespace Eapproval.Migrations
                     InitialType = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     InitialLocation = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     InitialPriorityId = table.Column<int>(type: "int", nullable: true),
+                    InitialPriority = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Source = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Tickets", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Tickets_PriorityClass_InitialPriorityId",
-                        column: x => x.InitialPriorityId,
-                        principalTable: "PriorityClass",
-                        principalColumn: "Id");
-                    table.ForeignKey(
-                        name: "FK_Tickets_PriorityClass_PriorityId",
-                        column: x => x.PriorityId,
-                        principalTable: "PriorityClass",
-                        principalColumn: "Id");
                     table.ForeignKey(
                         name: "FK_Tickets_Users_AssignedToId",
                         column: x => x.AssignedToId,
@@ -387,9 +360,9 @@ namespace Eapproval.Migrations
                     TicketId = table.Column<int>(type: "int", nullable: true),
                     Data = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     TakenBy = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Date = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Type = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Caption = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Date = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Type = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Caption = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Mentions = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     UserId = table.Column<int>(type: "int", nullable: true)
                 },
@@ -421,25 +394,26 @@ namespace Eapproval.Migrations
                     FromId = table.Column<int>(type: "int", nullable: true),
                     ToId = table.Column<int>(type: "int", nullable: true),
                     Type = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Mentions = table.Column<string>(type: "varchar(max)", nullable: true)
+                    Mentions = table.Column<string>(type: "varchar(max)", nullable: false),
+                    TicketsId = table.Column<int>(type: "int", nullable: true),
+                    UserId = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Notifications", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Notifications_Tickets_TicketId",
-                        column: x => x.TicketId,
+                        name: "FK_Notifications_Tickets_TicketsId",
+                        column: x => x.TicketsId,
                         principalTable: "Tickets",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "Id");
                     table.ForeignKey(
                         name: "FK_Notifications_Users_FromId",
                         column: x => x.FromId,
                         principalTable: "Users",
                         principalColumn: "Id");
                     table.ForeignKey(
-                        name: "FK_Notifications_Users_ToId",
-                        column: x => x.ToId,
+                        name: "FK_Notifications_Users_UserId",
+                        column: x => x.UserId,
                         principalTable: "Users",
                         principalColumn: "Id");
                 });
@@ -451,6 +425,7 @@ namespace Eapproval.Migrations
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    ConnectionId = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     ChatId = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
@@ -652,14 +627,14 @@ namespace Eapproval.Migrations
                 column: "FromId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Notifications_TicketId",
+                name: "IX_Notifications_TicketsId",
                 table: "Notifications",
-                column: "TicketId");
+                column: "TicketsId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Notifications_ToId",
+                name: "IX_Notifications_UserId",
                 table: "Notifications",
-                column: "ToId");
+                column: "UserId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_ProblemTypesClass_TeamId",
@@ -702,19 +677,9 @@ namespace Eapproval.Migrations
                 column: "CurrentHandlerId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Tickets_InitialPriorityId",
-                table: "Tickets",
-                column: "InitialPriorityId");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_Tickets_PrevHandlerId",
                 table: "Tickets",
                 column: "PrevHandlerId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Tickets_PriorityId",
-                table: "Tickets",
-                column: "PriorityId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Tickets_RaisedById",
@@ -780,9 +745,6 @@ namespace Eapproval.Migrations
 
             migrationBuilder.DropTable(
                 name: "Tickets");
-
-            migrationBuilder.DropTable(
-                name: "PriorityClass");
 
             migrationBuilder.DropTable(
                 name: "Users");

@@ -85,7 +85,7 @@ public class TicketSupportService
 
         var teams = await _context.Teams.AsNoTracking()
                           .Include(x => x.Subordinates)
-                          .Where(x => x.Subordinates.Any(x => x.UserId == user.Id))
+                          .Where(x => x.Subordinates.Any(x => x.Id == user.Id))
                           .ToListAsync();
         
         var result = await _context.Tickets

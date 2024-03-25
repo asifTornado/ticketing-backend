@@ -222,8 +222,8 @@ return new JsonResult(result);
 
         var teams = await _context.Teams.AsNoTracking()
                           .Include(x => x.Subordinates)
-                          .ThenInclude(x => x.User)
-                          .Where(x => x.Subordinates.Any(x => x.UserId == user.Id))
+                        
+                          .Where(x => x.Subordinates.Any(x => x.Id == user.Id))
                           .ToListAsync();
 
         List<string> teamNames = new();
@@ -256,7 +256,7 @@ return new JsonResult(result);
                         Status = x.Status,
                         ProblemDetails = x.ProblemDetails,
                         RaisedBy = new User{
-                            Id = x.RaisedById,
+                            Id = (int)x.RaisedById,
                             EmpName = x.RaisedBy.EmpName,
                             MailAddress = x.RaisedBy.MailAddress
                         },
@@ -266,7 +266,7 @@ return new JsonResult(result);
                             MailAddress = x.CurrentHandler.MailAddress
                         },
                         AssignedTo = new User {
-                            Id = x.AssignedToId,
+                            Id = (int)x.AssignedToId,
                             EmpName = x.AssignedTo.MailAddress,
                             MailAddress = x.AssignedTo.MailAddress
                         }

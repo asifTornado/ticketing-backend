@@ -15,7 +15,7 @@ public class User
   
     [JsonPropertyName("_id")]
     [Key]
-    public int? Id { get; set; }
+    public int Id { get; set; }
 
 
     [JsonPropertyName("empName")]
@@ -171,7 +171,7 @@ public class User
 
 
     [JsonPropertyName("TeamMembers")]
-    public virtual List<SubordinatesClass>? TeamMembers { get; set; }
+    public virtual List<Team>? TeamMembers { get; set; }
 
 
     [JsonPropertyName("TeamsLeaded")]

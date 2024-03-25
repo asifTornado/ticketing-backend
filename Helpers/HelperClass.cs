@@ -175,11 +175,11 @@ namespace Eapproval.Helpers
 
 
 
-        public async Task<List<SubordinatesClass?>> GetSupport(Tickets ticket)
+        public async Task<List<User?>> GetSupport(Tickets ticket)
         {
 
             string? departmentHead;
-            List<SubordinatesClass>? subordinateList = new List<SubordinatesClass>();
+            List<User>? subordinateList = new List<User>();
            
             departmentHead = ticket.Department;
            

@@ -200,12 +200,12 @@ namespace Eapproval.Migrations
 
             modelBuilder.Entity("Eapproval.Models.DetailsClass", b =>
                 {
-                    b.Property<int?>("Id")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
                         .HasAnnotation("Relational:JsonPropertyName", "_id");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int?>("Id"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Input")
                         .HasColumnType("nvarchar(max)")
@@ -443,12 +443,12 @@ namespace Eapproval.Migrations
 
             modelBuilder.Entity("Eapproval.Models.ProblemTypesClass", b =>
                 {
-                    b.Property<int?>("Id")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
                         .HasAnnotation("Relational:JsonPropertyName", "_id");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int?>("Id"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -471,38 +471,6 @@ namespace Eapproval.Migrations
                     b.ToTable("ProblemTypesClass");
 
                     b.HasAnnotation("Relational:JsonPropertyName", "problemTypes");
-                });
-
-            modelBuilder.Entity("Eapproval.Models.SubordinatesClass", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("Relational:JsonPropertyName", "_id");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<int?>("Rank")
-                        .HasColumnType("int")
-                        .HasAnnotation("Relational:JsonPropertyName", "rank");
-
-                    b.Property<int?>("TeamId")
-                        .HasColumnType("int")
-                        .HasAnnotation("Relational:JsonPropertyName", "TeamId");
-
-                    b.Property<int?>("UserId")
-                        .HasColumnType("int")
-                        .HasAnnotation("Relational:JsonPropertyName", "userId");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("TeamId");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("Subordinates");
-
-                    b.HasAnnotation("Relational:JsonPropertyName", "subordinates");
                 });
 
             modelBuilder.Entity("Eapproval.Models.Team", b =>
@@ -724,12 +692,12 @@ namespace Eapproval.Migrations
 
             modelBuilder.Entity("Eapproval.Models.User", b =>
                 {
-                    b.Property<int?>("Id")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
                         .HasAnnotation("Relational:JsonPropertyName", "_id");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int?>("Id"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<bool?>("Available")
                         .HasColumnType("bit")
@@ -854,6 +822,21 @@ namespace Eapproval.Migrations
                     b.HasIndex("TeamsMonitoredId");
 
                     b.ToTable("TeamMonitors", (string)null);
+                });
+
+            modelBuilder.Entity("TeamUser2", b =>
+                {
+                    b.Property<int>("SubordinatesId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("TeamMembersId")
+                        .HasColumnType("int");
+
+                    b.HasKey("SubordinatesId", "TeamMembersId");
+
+                    b.HasIndex("TeamMembersId");
+
+                    b.ToTable("TeamSuboridinates", (string)null);
                 });
 
             modelBuilder.Entity("Eapproval.Models.ActionObject", b =>
@@ -1030,23 +1013,6 @@ namespace Eapproval.Migrations
                     b.Navigation("Team");
                 });
 
-            modelBuilder.Entity("Eapproval.Models.SubordinatesClass", b =>
-                {
-                    b.HasOne("Eapproval.Models.Team", "Team")
-                        .WithMany("Subordinates")
-                        .HasForeignKey("TeamId")
-                        .OnDelete(DeleteBehavior.Cascade);
-
-                    b.HasOne("Eapproval.Models.User", "User")
-                        .WithMany("TeamMembers")
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.NoAction);
-
-                    b.Navigation("Team");
-
-                    b.Navigation("User");
-                });
-
             modelBuilder.Entity("Eapproval.Models.Team", b =>
                 {
                     b.HasOne("Eapproval.Models.User", "Head")
@@ -1125,6 +1091,21 @@ namespace Eapproval.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("TeamUser2", b =>
+                {
+                    b.HasOne("Eapproval.Models.User", null)
+                        .WithMany()
+                        .HasForeignKey("SubordinatesId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Eapproval.Models.Team", null)
+                        .WithMany()
+                        .HasForeignKey("TeamMembersId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
             modelBuilder.Entity("Eapproval.Models.ActionObject", b =>
                 {
                     b.Navigation("Files");
@@ -1152,8 +1133,6 @@ namespace Eapproval.Migrations
                     b.Navigation("Details");
 
                     b.Navigation("ProblemTypes");
-
-                    b.Navigation("Subordinates");
                 });
 
             modelBuilder.Entity("Eapproval.Models.Tickets", b =>
@@ -1186,8 +1165,6 @@ namespace Eapproval.Migrations
                     b.Navigation("NotificationFroms");
 
                     b.Navigation("NotificationTos");
-
-                    b.Navigation("TeamMembers");
 
                     b.Navigation("TeamsHeaded");
 

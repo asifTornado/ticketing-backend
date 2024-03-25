@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "z8eE04PzFU8JVd+OJkE4NtbKmBLPTCOske23y3YO7nCdiClnw2w7CPFMamOeC0HiSUl6DInHbNPXuceObiD9rg==",
+  "dgSpecHash": "v7uX+cCt6RTWhzbz+2uapGcDGGzKKwFInLeqRY21NUFYZULKR4PtMKdDG0eTJR8mqF8T7viqhooDAHieaDDxlA==",
   "success": true,
-  "projectFilePath": "E:\\ticketing 2\\ticketing backend - 2\\Eapproval.csproj",
+  "projectFilePath": "E:\\Ticketing Github\\backend\\Eapproval.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\Hameem\\.nuget\\packages\\automapper\\12.0.1\\automapper.12.0.1.nupkg.sha512",
     "C:\\Users\\Hameem\\.nuget\\packages\\automapper.extensions.microsoft.dependencyinjection\\12.0.1\\automapper.extensions.microsoft.dependencyinjection.12.0.1.nupkg.sha512",

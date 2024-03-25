@@ -29,9 +29,8 @@ public class TeamConfiguration : IEntityTypeConfiguration<Team>
 
 
        builder.HasMany(x => x.Subordinates)
-       .WithOne(x => x.Team)
-       .HasForeignKey(x => x.TeamId)
-       .OnDelete(DeleteBehavior.Cascade);  
+       .WithMany(x => x.TeamMembers)
+       .UsingEntity(e => e.ToTable("TeamSuboridinates")); 
 
        builder.HasMany(x => x.Details)
        .WithOne(x => x.Team)

@@ -6,6 +6,7 @@ using Eapproval.Factories.IFactories;
 using Dapper;
 using Microsoft.EntityFrameworkCore;
 using Eapproval.Services.IServices;
+using SixLabors.ImageSharp.Metadata.Profiles.Exif;
 
 namespace Eapproval.services;
 
@@ -15,7 +16,7 @@ public class TeamsService:ITeamsService
     private readonly IConnection _connection;
     private readonly IUsersService _usersService;
 
-    private readonly TicketContext _context = null;
+    private TicketContext _context;
 
        
 
@@ -27,12 +28,12 @@ public class TeamsService:ITeamsService
     }
 
 
-    public async Task<List<SubordinatesClass>> GetConcernedUsers(string name)
+    public async Task<List<User>> GetConcernedUsers(string name)
     {   
         var result = await _context.Teams
                      .AsNoTracking()
                      .Include(x => x.Subordinates)
-                     .ThenInclude(x => x.User)
+                
                      .Where(t => t.Name == name)
                      .SelectMany( t => t.Subordinates)
                      .ToListAsync();
@@ -59,7 +60,7 @@ public class TeamsService:ITeamsService
                      .Include(x => x.Monitors)
                      .Include(x => x.Leaders)
                      .Include(x => x.Subordinates)
-                     .ThenInclude(x => x.User)
+                
                      .ToListAsync();
         
         return result;
@@ -81,7 +82,7 @@ public class TeamsService:ITeamsService
                      .Include(x => x.Monitors)
                      .Include(x => x.Leaders)
                      .Include(x => x.Subordinates)
-                     .ThenInclude(x => x.User)
+              
                      .Where(t => t.Monitors.Any(m => m.MailAddress == user.MailAddress))
                      .ToListAsync();
 
@@ -107,7 +108,7 @@ public class TeamsService:ITeamsService
                      .Include(x => x.Monitors)
                      .Include(x => x.Leaders)
                      .Include(x => x.Subordinates)
-                     .ThenInclude(x => x.User)
+                  
                      .Where(t => t.Name == Name)
                      .FirstOrDefaultAsync();
 
@@ -132,7 +133,7 @@ public class TeamsService:ITeamsService
                      .Include(x => x.Monitors)
                      .Include(x => x.Leaders)
                      .Include(x => x.Subordinates)
-                     .ThenInclude(x => x.User)
+                 
                      
                      .Where(t => t.Leaders.Any(l => l.MailAddress == email))
                      .ToListAsync();
@@ -157,7 +158,7 @@ public class TeamsService:ITeamsService
                      .Include(x => x.Monitors)
                      .Include(x => x.Leaders)
                      .Include(x => x.Subordinates)
-                     .ThenInclude(x => x.User)
+                   
                      .Where(t => t.Monitors.Any(m => m.MailAddress == email))
                      .ToListAsync();
 
@@ -182,10 +183,10 @@ public class TeamsService:ITeamsService
                      .Include(x => x.Monitors)
                      .Include(x => x.Leaders)
                      .Include(x => x.Subordinates)
-                     .ThenInclude(x => x.User)
+
                     .Where(t => t.Leaders.Any(l => l.MailAddress == user.MailAddress))
                     .SelectMany(t => t.Subordinates)
-                    .Select(s => s.User)
+                
                     .ToListAsync();
 
         return result;
@@ -215,10 +216,9 @@ public class TeamsService:ITeamsService
                      .Include(x => x.Monitors)
                      .Include(x => x.Leaders)
                      .Include(x => x.Subordinates)
-                     .ThenInclude(x => x.User)
                     .Where(t => t.Monitors.Any(m => m.MailAddress == user.MailAddress))
                     .SelectMany(t => t.Subordinates)
-                    .Select(s => s.User)
+                
                     .ToListAsync();
 
         return result;
@@ -245,9 +245,7 @@ public class TeamsService:ITeamsService
                      .Include(x => x.Monitors)
                      .Include(x => x.Leaders)
                      .Include(x => x.Subordinates)
-                     .ThenInclude(x => x.User)
                     .SelectMany(t => t.Subordinates)
-                    .Select(s => s.User)
                     .ToListAsync();
 
 
@@ -276,7 +274,6 @@ public class TeamsService:ITeamsService
                      .Include(x => x.Monitors)
                      .Include(x => x.Leaders)
                      .Include(x => x.Subordinates)
-                      .ThenInclude(x => x.User)
                      .Include(x => x.ProblemTypes)
                     
 
@@ -340,67 +337,190 @@ public class TeamsService:ITeamsService
 
 
         var original = await _context.Teams
-                     .AsNoTracking()
                      .Include( x => x.Leaders)
+                     .Include(x => x.ProblemTypes)
                      .Include( x => x.Monitors)
                      .Include(x => x.Subordinates)
-                     .ThenInclude(x => x.User)
                      .Include(x => x.Details)
                      .Where(t => t.Id == id)
                      .FirstOrDefaultAsync();
 
-      original.Subordinates.ForEach(s => {
-           var exist = updatedTeam.Subordinates.Any(x => x.Id == s.Id);
-           if(!exist){
-               _context.Entry(s).State = EntityState.Deleted;
-           }else{
-                _context.Entry(s).State = EntityState.Modified;
-           }
+        original.Name = updatedTeam.Name;
+
+        var originalMonitorsCopy = original.Monitors.ToList();
+
+        originalMonitorsCopy.ForEach(monitor=>{
+             var exist = updatedTeam.Monitors.Any(x => x.Id == monitor.Id);
+             if(exist == false){
+                original.Monitors.Remove(monitor);
+                monitor.TeamsMonitored.Remove(original);
+             }
         });
 
-
-        original.Leaders.ForEach(l => {
-           var exist = updatedTeam.Leaders.Any(x => x.Id == l.Id);
-           if(!exist){
-               _context.Entry(l).State = EntityState.Deleted;
-           }else{
-                _context.Entry(l).State = EntityState.Modified;
-           }
-        });
-
-
-        original.Monitors.ForEach(m => {
-           var exist = updatedTeam.Monitors.Any(x => x.Id == m.Id);
-           if(!exist){
-               _context.Entry(m).State = EntityState.Deleted;
-           }else{
-                _context.Entry(m).State = EntityState.Modified;
-           }
-        });
-
-
-        original.Details.ForEach(d => {
-           var exist = updatedTeam.Details.Any(x => x.Id == d.Id);
-           if(!exist){
-               _context.Entry(d).State = EntityState.Deleted;
-           }else{
-                _context.Entry(d).State = EntityState.Modified;
-           }
-        });
-        
-
-        original.ProblemTypes.ForEach(p => {
-            var exist = updatedTeam.ProblemTypes.Any(x => p.Id == x.Id );
-
-            if(!exist){
-                _context.Entry(p).State = EntityState.Added;
-            }else{
-                _context.Entry(p).State = EntityState.Modified;
+        updatedTeam.Monitors.ForEach(monitor => {
+            var exist = original.Monitors.Find(x => x.Id == monitor.Id);
+            if(exist == null){
+                original.Monitors.Add(monitor);
+                monitor.TeamsMonitored = new List<Team>();
+                monitor.TeamsMonitored.Add(original);
+                _context.Entry(monitor).State = EntityState.Modified;
             }
         });
 
 
-        _context.Entry(updatedTeam).State = EntityState.Modified;
+        var originalLeadersCopy = original.Leaders.ToList();
+
+        originalLeadersCopy.ForEach(leader=>{
+             var exist = updatedTeam.Leaders.Any(x => x.Id == leader.Id);
+             if(exist == false){
+                original.Leaders.Remove(leader);
+                leader.TeamsLeaded.Remove(original);
+             }
+        });
+
+        updatedTeam.Leaders.ForEach(leader => {
+            var exist = original.Leaders.Find(x => x.Id == leader.Id);
+            if(exist == null){
+                original.Leaders.Add(leader);
+                leader.TeamsLeaded = new List<Team>();
+                leader.TeamsLeaded.Add(original);
+                _context.Entry(leader).State = EntityState.Modified;
+            }
+        });
+
+
+
+
+        var originalSubordinatesCopy = original.Subordinates.ToList();
+
+        originalSubordinatesCopy.ForEach(subordinate=>{
+             var exist = updatedTeam.Subordinates.Any(x => x.Id == subordinate.Id);
+             if(exist == false){
+                original.Subordinates.Remove(subordinate);
+                subordinate.TeamMembers.Remove(original);
+             }
+        });
+
+        updatedTeam.Subordinates.ForEach(subordinate => {
+            var exist = original.Subordinates.Find(x => x.Id == subordinate.Id);
+            if(exist == null){
+                original.Subordinates.Add(subordinate);
+                subordinate.TeamMembers ??= new List<Team>();
+                subordinate.TeamMembers.Add(original);
+                _context.Entry(subordinate).State = EntityState.Modified;
+            }
+        });
+
+
+
+
+
+         var originalProblemTypes = original.ProblemTypes.ToList();
+
+        originalProblemTypes.ForEach(problemType=>{
+             var exist = updatedTeam.ProblemTypes.Any(x => x.Id == problemType.Id);
+             if(exist == false){
+                original.ProblemTypes.Remove(problemType);
+             }
+        });
+
+        updatedTeam.ProblemTypes.ForEach(problemType => {
+            var exist = original.ProblemTypes.Find(x => x.Id == problemType.Id);
+            if(exist == null){
+                original.ProblemTypes.Add(problemType);
+            }else{
+                exist.Subs = problemType.Subs;
+                exist.Name = problemType.Name;
+            }
+        });
+
+
+        var originalDetails = original.Details.ToList();
+
+        originalDetails.ForEach(detail=>{
+             var exist = updatedTeam.Details.Any(x => x.Id == detail.Id);
+             if(exist == false){
+                original.Details.Remove(detail);
+             }
+        });
+
+        updatedTeam.Details.ForEach(detail => {
+            var exist = original.Details.Find(x => x.Id == detail.Id);
+            if(exist == null){
+                original.Details.Add(detail);
+            }else{
+                exist.Label = detail.Label;
+                exist.Input = detail.Input;
+            }
+        });
+
+
+
+         
+
+       
+        
+
+    //   original.Subordinates.ForEach(s => {
+    //        var exist = updatedTeam.Subordinates.Any(x => x.Id == s.Id);
+    //        if(!exist){
+    //            _context.Entry(s).State = EntityState.Deleted;
+    //        }else{
+    //             _context.Entry(s).State = EntityState.Modified;
+    //        }
+    //     });
+
+
+    //     original.Leaders.ForEach(l => {
+    //        var exist = updatedTeam.Leaders.Any(x => x.Id == l.Id);
+    //        if(!exist){
+    //            _context.Entry(l).State = EntityState.Deleted;
+    //        }else{
+    //             _context.Entry(l).State = EntityState.Modified;
+    //        }
+    //     });
+
+    //     var originalMonitorsCopy = original.Leaders.ToList();
+
+
+    //     originalMonitorsCopy.ForEach(m => {
+    //        var exist = updatedTeam.Monitors.Any(x => x.Id == m.Id);
+    //        if(!exist){
+    //            original.Monitors.Remove(m);
+    //            m.TeamsMonitored.Remove(original);
+    //            _context.Entry(m).State = EntityState.Modified;
+
+    //        }else{
+    //             _context.Entry(m).State = EntityState.Modified;
+    //        }
+    //     });
+
+
+    //     original.Details.ForEach(d => {
+    //        var exist = updatedTeam.Details.Any(x => x.Id == d.Id);
+    //        if(!exist){
+    //            _context.Entry(d).State = EntityState.Deleted;
+    //        }else{
+    //             _context.Entry(d).State = EntityState.Modified;
+    //        }
+    //     });
+        
+
+    //     original.ProblemTypes.ForEach(p => {
+    //         var exist = updatedTeam.ProblemTypes.Any(x => p.Id == x.Id );
+
+    //         if(!exist){
+    //             _context.Entry(p).State = EntityState.Added;
+    //         }else{
+    //             _context.Entry(p).State = EntityState.Modified;
+    //         }
+    //     });
+
+
+        // _context.Entry(original).State = EntityState.Modified;
+
+
+
 
         await _context.SaveChangesAsync();
 
@@ -409,10 +529,7 @@ public class TeamsService:ITeamsService
 
 
 
-        // await using var connection = _connection.GetConnection();
-        // await connection.OpenAsync();
-        // var sql = @"UPDATE Teams SET Name = @Name, Description = @Description, ProblemTypes = @ProblemTypes, Subordinates = @Subordinates, Leaders = @Leaders, Monitors = @Monitors WHERE Id = @Id";
-        // await connection.ExecuteAsync(sql, updatedTeam);
+      
 
     }
         
@@ -440,10 +557,9 @@ public class TeamsService:ITeamsService
                      .Include(x => x.Monitors)
                      .Include(x => x.Leaders)
                      .Include(x => x.Subordinates)
-                     .ThenInclude(x => x.User)
                      .Include(x => x.ProblemTypes)
 
-                     .Where(t => t.Subordinates.Any(s => s.User.MailAddress == user.MailAddress))
+                     .Where(t => t.Subordinates.Any(s => s.MailAddress == user.MailAddress))
                      .SelectMany(t => t.ProblemTypes)
                      .ToListAsync();
 

@@ -9,13 +9,13 @@ build_property.EnforceExtendedAnalyzerRules =
 build_property._SupportedPlatformList = Linux,macOS,Windows
 build_property.RootNamespace = Eapproval
 build_property.RootNamespace = Eapproval
-build_property.ProjectDir = E:\ticketing 2\ticketing backend - 2\
+build_property.ProjectDir = E:\Ticketing Github\backend\
 build_property.RazorLangVersion = 7.0
 build_property.SupportLocalizedComponentNames = 
 build_property.GenerateRazorMetadataSourceChecksumAttributes = 
-build_property.MSBuildProjectDirectory = E:\ticketing 2\ticketing backend - 2
+build_property.MSBuildProjectDirectory = E:\Ticketing Github\backend
 build_property._RazorSourceGeneratorDebug = 
 
-[E:/ticketing 2/ticketing backend - 2/Views/Main/home.cshtml]
+[E:/Ticketing Github/backend/Views/Main/home.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcTWFpblxob21lLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 

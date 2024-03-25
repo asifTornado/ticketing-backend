@@ -15,6 +15,6 @@ public interface ITeamsService{
     Task<List<Team>> GetTeamsForHead(string email);
     Task<Team> GetTeamByName(string Name);
     Task<List<Team>> GetAllTeams();
-    Task<List<SubordinatesClass>> GetConcernedUsers(string name);
+    Task<List<User>> GetConcernedUsers(string name);
     Task<List<Team>> GetTeamsForMonitors(User user);
 }

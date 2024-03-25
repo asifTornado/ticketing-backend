@@ -64,7 +64,7 @@ namespace Eapproval.Controllers.TicketControllers
             var team = await _teamsService.GetTeamByName(results.Department);
 
             var ticketingHead = team.Leaders.Where( x => x.Location == results.Location).FirstOrDefault();
-            var supportUsers = team.Subordinates.Where( x => x.User.Location == results.Location).Select(x => x.User.MailAddress).ToList();
+            var supportUsers = team.Subordinates.Where( x => x.Location == results.Location).Select(x => x.MailAddress).ToList();
    
             results.TicketingHead = ticketingHead;
             results.Users = supportUsers;

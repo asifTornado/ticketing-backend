@@ -82,10 +82,7 @@ public class UserConfiguration : IEntityTypeConfiguration<User>
         .HasForeignKey(x => x.ForwardedToId);
 
 
-        builder.HasMany(x => x.TeamMembers)
-        .WithOne(x => x.User)
-        .HasForeignKey(x => x.UserId)
-        .OnDelete(DeleteBehavior.NoAction);
+      
 
 
         builder.HasMany(x => x.TeamsHeaded)

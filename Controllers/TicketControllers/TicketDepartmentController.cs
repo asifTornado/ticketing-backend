@@ -83,8 +83,8 @@ namespace Eapproval.Controllers.TicketControllers
 
                foreach (var subordinate in subordinates)
             {
-                _notifier.InsertNotification(action.Time, message, user, subordinate.User, results.Id);
-                results.Users.Add(subordinate.User.MailAddress);
+                _notifier.InsertNotification(action.Time, message, user, subordinate, results.Id);
+                results.Users.Add(subordinate.MailAddress);
 
             }
 

@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "E:\\ticketing 2\\ticketing backend - 2\\Eapproval.csproj": {}
+    "E:\\Ticketing Github\\backend\\Eapproval.csproj": {}
   },
   "projects": {
-    "E:\\ticketing 2\\ticketing backend - 2\\Eapproval.csproj": {
+    "E:\\Ticketing Github\\backend\\Eapproval.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "E:\\ticketing 2\\ticketing backend - 2\\Eapproval.csproj",
+        "projectUniqueName": "E:\\Ticketing Github\\backend\\Eapproval.csproj",
         "projectName": "Eapproval",
-        "projectPath": "E:\\ticketing 2\\ticketing backend - 2\\Eapproval.csproj",
+        "projectPath": "E:\\Ticketing Github\\backend\\Eapproval.csproj",
         "packagesPath": "C:\\Users\\Hameem\\.nuget\\packages\\",
-        "outputPath": "E:\\ticketing 2\\ticketing backend - 2\\obj\\",
+        "outputPath": "E:\\Ticketing Github\\backend\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\Hameem\\AppData\\Roaming\\NuGet\\NuGet.Config",

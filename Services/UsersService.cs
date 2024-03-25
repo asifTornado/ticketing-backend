@@ -46,7 +46,7 @@ public class UsersService:IUsersService
 
     foreach(var team in teams){
         foreach(var subordinate in team.Subordinates){
-            mails.Add(subordinate.User.MailAddress);
+            mails.Add(subordinate.MailAddress);
         }
     }
 
@@ -203,7 +203,11 @@ public class UsersService:IUsersService
 
     public async Task RemoveAsync(int? id){
 
-        _context.Entry(new User(){Id = id}).State = EntityState.Deleted;
+        if(id != null){
+            int newId = (int)id;
+        _context.Entry(new User(){Id = newId }).State = EntityState.Deleted;
+        }
+
 
         // await using var connection = _connection.GetConnection();
         // await connection.OpenAsync();

@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Eapproval.Migrations
 {
     [DbContext(typeof(TicketContext))]
-    [Migration("20240319093021_notifications table changed")]
-    partial class notificationstablechanged
+    [Migration("20240324094906_1")]
+    partial class _1
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -431,20 +431,17 @@ namespace Eapproval.Migrations
                     b.Property<int?>("UserId")
                         .HasColumnType("int");
 
-                    b.Property<int?>("UserId1")
-                        .HasColumnType("int");
-
                     b.HasKey("Id");
+
+                    b.HasIndex("FromId");
 
                     b.HasIndex("TicketsId");
 
                     b.HasIndex("UserId");
 
-                    b.HasIndex("UserId1");
-
                     b.ToTable("Notifications");
 
-                    b.HasAnnotation("Relational:JsonPropertyName", "notification");
+                    b.HasAnnotation("Relational:JsonPropertyName", "notificationTos");
                 });
 
             modelBuilder.Entity("Eapproval.Models.ProblemTypesClass", b =>
@@ -1010,17 +1007,20 @@ namespace Eapproval.Migrations
 
             modelBuilder.Entity("Eapproval.Models.Notification", b =>
                 {
+                    b.HasOne("Eapproval.Models.User", "From")
+                        .WithMany("NotificationFroms")
+                        .HasForeignKey("FromId")
+                        .OnDelete(DeleteBehavior.NoAction);
+
                     b.HasOne("Eapproval.Models.Tickets", null)
                         .WithMany("Notifications")
                         .HasForeignKey("TicketsId");
 
                     b.HasOne("Eapproval.Models.User", null)
-                        .WithMany("NotificationFroms")
+                        .WithMany("NotificationTos")
                         .HasForeignKey("UserId");
 
-                    b.HasOne("Eapproval.Models.User", null)
-                        .WithMany("NotificationTos")
-                        .HasForeignKey("UserId1");
+                    b.Navigation("From");
                 });
 
             modelBuilder.Entity("Eapproval.Models.ProblemTypesClass", b =>

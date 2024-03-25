@@ -127,8 +127,8 @@ namespace Eapproval.Controllers.TicketControllers
 
             foreach (var subordinate in subordinates)
             {
-                _notifier.InsertNotification(action.Time, message, user, subordinate.User, ticket.Id);
-                ticket.Users.Add(subordinate.User.MailAddress);
+                _notifier.InsertNotification(action.Time, message, user, subordinate, ticket.Id);
+                ticket.Users.Add(subordinate.MailAddress);
 
             }
 
@@ -216,7 +216,7 @@ namespace Eapproval.Controllers.TicketControllers
              var subordinates = await _teamsService.GetConcernedUsers(ticket.Department);
                  foreach (var subordinate in subordinates)
             {
-                _notifier.InsertNotification(action.Time, message, user, subordinate.User, ticket.Id);
+                _notifier.InsertNotification(action.Time, message, user, subordinate, ticket.Id);
               
 
             }
@@ -385,7 +385,7 @@ namespace Eapproval.Controllers.TicketControllers
             var team = await _teamsService.GetTeamByName(ticket.Department!);
 
             var ticketingHead = team.Leaders!.Where( x => x.Location == ticket.Location).FirstOrDefault();
-            var supportUsers = team.Subordinates!.Where( x => x.User?.Location == ticket.Location).Select(x => x.User?.MailAddress).ToList();
+            var supportUsers = team.Subordinates!.Where( x => x.Location == ticket.Location).Select(x => x.MailAddress).ToList();
    
             ticket.TicketingHead = ticketingHead;
             ticket.Users = supportUsers!;

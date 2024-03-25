@@ -19,7 +19,7 @@ namespace Eapproval.Models;
 
         [JsonPropertyName("_id")]
         [Key]
-        public int? Id { get; set; }
+        public int Id { get; set; }
 
 
     

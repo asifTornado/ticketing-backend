@@ -59,7 +59,7 @@ public class Team
 
     [BsonElement("subordinates")]
     [JsonPropertyName("subordinates")]
-    public virtual List<SubordinatesClass>? Subordinates { get; set; } = null;
+    public virtual List<User>? Subordinates { get; set; } = null;
 
 
 

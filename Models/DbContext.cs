@@ -30,7 +30,7 @@ public class  TicketContext: DbContext
 
 
 
-    public DbSet<SubordinatesClass> Subordinates { get; set; }
+    // public DbSet<SubordinatesClass> Subordinates { get; set; }
     
    
 
@@ -68,7 +68,7 @@ public class  TicketContext: DbContext
       modelBuilder.ApplyConfiguration(new FileConfiguration());
       modelBuilder.ApplyConfiguration(new ActionConfiguration());
       modelBuilder.ApplyConfiguration(new ProblemConfiguration());
-      modelBuilder.ApplyConfiguration(new SubordinateConfiguration());
+      // modelBuilder.ApplyConfiguration(new SubordinateConfiguration());
       modelBuilder.ApplyConfiguration(new TeamConfiguration());
       // modelBuilder.ApplyConfiguration(new PriorityConfiguration());
       modelBuilder.ApplyConfiguration(new DetailsConfiguration());
