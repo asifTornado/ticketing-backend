@@ -34,4 +34,12 @@ public class TicketVM{
     [JsonPropertyName("priority")]
     public PriorityClass? Priority { get; set; } = new PriorityClass();
 
+    
+    [JsonPropertyName("hasService")]
+    public bool? HasService { get; set; } = false;
+
+    
+
+
+
 }

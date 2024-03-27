@@ -30,12 +30,12 @@ public class Team
 
   
     [JsonPropertyName("leaders")]
-    public virtual List<User>? Leaders { get; set; } = null;
+    public virtual List<User>? Leaders { get; set; } = new List<User>();
 
 
    
     [JsonPropertyName("problemTypes")]
-    public virtual List<ProblemTypesClass>? ProblemTypes { get; set; } = null;
+    public virtual List<ProblemTypesClass>? ProblemTypes { get; set; } = new List<ProblemTypesClass>();
 
 
 
@@ -43,7 +43,7 @@ public class Team
 
    
     [JsonPropertyName("monitors")]
-    public virtual List<User>? Monitors { get; set; } = null;
+    public virtual List<User>? Monitors { get; set; } = new List<User>();
 
 
     
@@ -59,13 +59,13 @@ public class Team
 
     [BsonElement("subordinates")]
     [JsonPropertyName("subordinates")]
-    public virtual List<User>? Subordinates { get; set; } = null;
+    public virtual List<User>? Subordinates { get; set; } = new List<User>();
 
 
 
     [BsonElement("details")]
     [JsonPropertyName("details")]
-    public virtual List<DetailsClass>? Details { get; set; } = null;
+    public virtual List<DetailsClass>? Details { get; set; } = new List<DetailsClass>();
 
 
 }

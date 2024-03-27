@@ -255,21 +255,21 @@ return new JsonResult(result);
                         RequestDate = x.RequestDate,
                         Status = x.Status,
                         ProblemDetails = x.ProblemDetails,
-                        RaisedBy = new User{
-                            Id = (int)x.RaisedById,
+                        RaisedBy =x.RaisedBy != null ? new User{
+                            Id = x.RaisedById != null ? (int)x.RaisedById : 0,
                             EmpName = x.RaisedBy.EmpName,
                             MailAddress = x.RaisedBy.MailAddress
-                        },
-                        CurrentHandler = new User{
-                            Id = x.CurrentHandler.Id,
+                        }:null,
+                        CurrentHandler = x.CurrentHandler != null ? new User{
+                              Id = x.CurrentHandlerId != null ? (int)x.CurrentHandlerId : 0,
                             EmpName = x.CurrentHandler.EmpName,
                             MailAddress = x.CurrentHandler.MailAddress
-                        },
-                        AssignedTo = new User {
-                            Id = (int)x.AssignedToId,
+                        } : null,
+                        AssignedTo = x.AssignedTo != null ? new User {
+                               Id = x.AssignedToId != null ? (int)x.AssignedToId : 0,
                             EmpName = x.AssignedTo.MailAddress,
                             MailAddress = x.AssignedTo.MailAddress
-                        }
+                        }:null
 
                      })
                      .ToListAsync();
